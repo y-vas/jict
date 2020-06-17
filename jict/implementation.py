@@ -51,8 +51,9 @@ class jict(defaultdict):
                 for x in self.generator:
                     c += 1
                     ps = 100 / cnt * c
-                    print ( "Loading ("+str(ps)+'%)' + "." * int(ps) , end="\r")
+                    print ( "Loading ("+str(ps)+'%)' + "." * int(ps) )
                     yield to_jict(x)
+
             else:
                 for x in self.generator:
                     yield to_jict(x)
