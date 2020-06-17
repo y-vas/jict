@@ -32,9 +32,10 @@ class jict(defaultdict):
 
         if 'pymongo' in sys.modules:
             if isinstance(nd, Cursor):
-                self.generator = nd
-                return to_jict(next( self.generator ))
-
+                jt = to_jict(next( self.generator ))
+                jt.generator = nd
+                return jt
+                
         return super(jict, self).__new__(self, nd)
 
     def __init__(self, nd = None):
