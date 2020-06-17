@@ -63,9 +63,9 @@ class _recursive_dict(defaultdict):
     #     for key, value in flatten_nested_items(self):
     #         yield value
 
-    items_flat = iteritems_flat
-    keys_flat = iterkeys_flat
-    values_flat = itervalues_flat
+    # items_flat = iteritems_flat
+    # keys_flat = iterkeys_flat
+    # values_flat = itervalues_flat
 
     def dict(self, input_dict=None):
         plain_dict = dict()
