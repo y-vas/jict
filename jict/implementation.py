@@ -123,44 +123,6 @@ def jict_from_dict(orig_dict, nd):
 
 class jict(_recursive_dict):
 
-    # def update(self, other):
-    #     """Update recursively."""
-    #     _recursive_update(self, other)
-
-    def __init__(self, *param, **named_param ):
-        """
-        Constructor.
-
-        Takes one or two parameters
-            1) int, [TYPE]
-            1) dict
-        """
-        if not len(param):
-            self.factory = jict
-            defaultdict.__init__(self, self.factory)
-            return
-
-        if len(param) == 1:
-            # int = level
-            if isinstance(param[0], int):
-                self.factory = _nested_levels(param[0], _any_type())
-                defaultdict.__init__(self, self.factory)
-                return
-            # existing dict
-            if isinstance(param[0], dict):
-                self.factory = jict
-                defaultdict.__init__(self, self.factory)
-                jict_from_dict(param[0], self)
-                return
-
-        if len(param) == 2:
-            if isinstance(param[0], int):
-                self.factory = _nested_levels(*param)
-                defaultdict.__init__(self, self.factory)
-                return
-
-        raise Exception("jict should be initialised with either "
-                        "1) the number of nested levels and an optional type, or "
-                        "2) an existing dict to be converted into a nested dict "
-                        "(factory = %s. len(param) = %d, param = %s"
-                        % (self.factory, len(param), param))
+    def __init__(self ):
+        self.factory = jict
+        defaultdict.__init__(self, self.factory)
