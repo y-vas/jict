@@ -45,8 +45,8 @@ class jict(defaultdict):
 
     def __iter__(self):
         if self.generator != None:
-            if hasattr(self.generator, count):
-                cnt = self.generator.conunt()
+            if hasattr(self.generator, 'count'):
+                cnt = self.generator.count()
                 c = 0
                 for x in self.generator:
                     c += 1
