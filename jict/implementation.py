@@ -29,7 +29,8 @@ class jict(defaultdict):
     verbose = False
     def __new__(self, nd = None ,verbose = False):
         if isinstance( nd, dict ):
-            dt = jict(nd,verbose)
+            dt = to_jict(nd)
+            dt.verbose = verbose
             return dt
 
         if 'pymongo' in sys.modules:
@@ -65,8 +66,8 @@ class jict(defaultdict):
             else:
                 if not started:
                     started = True
-                    yield self
-                    
+                    yield jict(self.dict())
+
                 for x in self.generator:
                     yield to_jict(x)
 
