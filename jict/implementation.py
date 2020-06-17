@@ -26,32 +26,34 @@ def to_jict(prev):
 
 class jict(defaultdict):
     generator = None
-    def __new__(self, nd = None ):
+    verbose = False
+    def __new__(self, nd = None ,verbose = False):
         if isinstance( nd, dict ):
-            dt = to_jict(nd)
+            dt = jict(nd,verbose)
             return dt
 
         if 'pymongo' in sys.modules:
             if isinstance(nd, Cursor):
-                jt = to_jict( next(nd) )
+                jt = jict( next(nd) ,verbose )
                 jt.generator = nd
                 return jt
 
-        return super(jict, self).__new__(self, nd)
+        return super(jict, self).__new__(self, nd, verbose )
 
-    def __init__(self, nd = None):
+    def __init__(self, nd = None, verbose = False ):
         self.factory = jict
+        self.verbose = verbose
         defaultdict.__init__( self, self.factory )
 
     def __iter__(self):
         if self.generator != None:
-            if hasattr(self.generator, 'count'):
+            if hasattr(self.generator, 'count') and self.verbose:
                 cnt = self.generator.count()
                 c = 0
                 for x in self.generator:
-                    c += 1
                     ps = 100 / cnt * c
                     print ( "Loading ("+str(ps)+'%)' + "." * int(ps) )
+                    c += 1
                     yield to_jict(x)
 
             else:
