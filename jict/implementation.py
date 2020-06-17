@@ -4,6 +4,14 @@ from __future__ import division
 
 from collections import defaultdict
 import sys, json
+from bson import ObjectId
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 
 def to_jict(prev):
     nd = jict()
@@ -40,4 +48,4 @@ class jict(defaultdict):
         return plain_dict
 
     def __str__(self):
-        return json.dumps(self.dict(), indent = 2 )
+        return json.dumps(self.dict(), indent = 2 , cls=JSONEncoder )
