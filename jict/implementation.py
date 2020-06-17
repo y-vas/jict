@@ -6,7 +6,7 @@ from collections import defaultdict
 import sys, json
 
 def to_jict(dict):
-    nd = jdict()
+    nd = jict()
     for k,i in dict.items():
         if isinstance(i,dict):
             nd[k] = to_jict(i)
