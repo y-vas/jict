@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2015 Leo Goodstadt <nested_dict@llew.org.uk>
+# Copyright (C) 2015 Leo Goodstadt <jict@llew.org.uk>
 #
-# This file is part of nested_dict.
+# This file is part of jict.
 #
-# nested_dict is free software: you can redistribute it and/or modify
+# jict is free software: you can redistribute it and/or modify
 # it under the terms of the MIT license as found here
 # http://opensource.org/licenses/MIT.
 #
@@ -40,19 +40,19 @@ def parse_version(module_file):
 
 
 f = open(os.path.join(os.path.dirname(__file__), "README.rst"))
-nested_dict_readme = f.read()
+jict_readme = f.read()
 f.close()
-nested_dict_version = parse_version(os.path.join("nested_dict", "__init__.py"))
+jict_version = parse_version(os.path.join("jict", "__init__.py"))
 
 setup(
-    name="nested_dict",
-    version=nested_dict_version,
+    name="jict",
+    version=jict_version,
     description="Python dictionary with automatic and arbitrary levels of nestedness",
-    long_description=nested_dict_readme,
-    packages=["nested_dict"],
+    long_description=jict_readme,
+    packages=["jict"],
     author='Leo Goodstadt',
-    author_email='nested_dict@llew.org.uk',
-    url="http://pypi.python.org/pypi/nested_dict",
+    author_email='jict@llew.org.uk',
+    url="http://pypi.python.org/pypi/jict",
     install_requires=[],
     setup_requires=[],
     keywords=["nested", "dict", "defaultdict", "dictionary", "auto-vivification"],
@@ -82,12 +82,12 @@ setup(
         "Topic :: Utilities",
     ],
 
-    test_suite="tests.test_nested_dict",
+    test_suite="tests.test_jict",
 )
 
 # python setup.py register
 # flake8 *.py tests --exclude=ez_setup.py --max-line-length=100
-# nosetests --with-coverage --cover-package nested_dict --cover-inclusive --cover-min-percentage 85
+# nosetests --with-coverage --cover-package jict --cover-inclusive --cover-min-percentage 85
 # make -C docs html
 # git tag -a v1.5.1 -m "Version 1.5.1"
 # python setup.py sdist --format=gztar,zip upload
