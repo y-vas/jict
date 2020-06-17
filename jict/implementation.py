@@ -74,12 +74,12 @@ class jict(defaultdict):
                 for x in self.generator:
                     yield to_jict(x)
 
-    def default(self,defa):
-        print(self)
+    def set(self,key,deft):
+        if key in self.keys():
+            return self[key]
 
-        if self.dict() == {}:
-            self = jict(defa)
-
+        self[key] = deft
+        
     def dict(self, input_dict=None ):
         plain_dict = dict()
         if input_dict is None:
