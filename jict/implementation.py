@@ -46,10 +46,16 @@ class jict(defaultdict):
         defaultdict.__init__( self, self.factory )
 
     def __iter__(self):
+        started = False
+
         if self.generator != None:
             if hasattr(self.generator, 'count') and self.verbose:
                 cnt = self.generator.count()
                 c = 0
+                if not started:
+                    started = True
+                    yield self
+
                 for x in self.generator:
                     ps = 100 / cnt * c
                     print ( "Loading ("+str(ps)+'%)' + "." * int(ps) )
@@ -57,6 +63,10 @@ class jict(defaultdict):
                     yield to_jict(x)
 
             else:
+                if not started:
+                    started = True
+                    yield self
+                    
                 for x in self.generator:
                     yield to_jict(x)
 
