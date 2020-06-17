@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-"""`nested_dict` provides dictionaries with multiple levels of nested-ness."""
+"""`jict` provides dictionaries with multiple levels of nested-ness."""
 from __future__ import print_function
 from __future__ import division
 
 ################################################################################
 #
-#   nested_dict.py
+#   jict.py
 #
 #   Copyright (c) 2009, 2015 Leo Goodstadt
 #
@@ -37,7 +37,7 @@ import sys
 
 def flatten_nested_items(dictionary):
     """
-    Flatten a nested_dict.
+    Flatten a jict.
 
     iterate through nested dictionary (with iterkeys() method)
          and return with nested keys flattened into a tuple
@@ -59,13 +59,13 @@ def flatten_nested_items(dictionary):
 
 class _recursive_dict(defaultdict):
     """
-    Parent class of nested_dict.
+    Parent class of jict.
 
     Defined separately for _nested_levels to work
     transparently, so dictionaries with a specified (and constant) degree of nestedness
     can be created easily.
 
-    The "_flat" functions are defined here rather than in nested_dict because they work
+    The "_flat" functions are defined here rather than in jict because they work
         recursively.
 
     """
@@ -137,14 +137,14 @@ else:
 
 # _________________________________________________________________________________________
 #
-#   nested_dict
+#   jict
 #
 # _________________________________________________________________________________________
-def nested_dict_from_dict(orig_dict, nd):
-    """Helper to build nested_dict from a dict."""
+def jict_from_dict(orig_dict, nd):
+    """Helper to build jict from a dict."""
     for key, value in iteritems(orig_dict):
         if isinstance(value, (dict,)):
-            nd[key] = nested_dict_from_dict(value, nested_dict())
+            nd[key] = jict_from_dict(value, jict())
         else:
             nd[key] = value
     return nd
@@ -155,7 +155,7 @@ def _recursive_update(nd, other):
         #print ("key=", key)
         if isinstance(value, (dict,)):
 
-            # recursive update if my item is nested_dict
+            # recursive update if my item is jict
             if isinstance(nd[key], (_recursive_dict,)):
                 #print ("recursive update", key, type(nd[key]))
                 _recursive_update(nd[key], other[key])
@@ -178,10 +178,10 @@ def _recursive_update(nd, other):
 
 # _________________________________________________________________________________________
 #
-#   nested_dict
+#   jict
 #
 # _________________________________________________________________________________________
-class nested_dict(_recursive_dict):
+class jict(_recursive_dict):
     """
     Nested dict.
 
@@ -201,7 +201,7 @@ class nested_dict(_recursive_dict):
             1) dict
         """
         if not len(param):
-            self.factory = nested_dict
+            self.factory = jict
             defaultdict.__init__(self, self.factory)
             return
 
@@ -213,9 +213,9 @@ class nested_dict(_recursive_dict):
                 return
             # existing dict
             if isinstance(param[0], dict):
-                self.factory = nested_dict
+                self.factory = jict
                 defaultdict.__init__(self, self.factory)
-                nested_dict_from_dict(param[0], self)
+                jict_from_dict(param[0], self)
                 return
 
         if len(param) == 2:
@@ -224,7 +224,7 @@ class nested_dict(_recursive_dict):
                 defaultdict.__init__(self, self.factory)
                 return
 
-        raise Exception("nested_dict should be initialised with either "
+        raise Exception("jict should be initialised with either "
                         "1) the number of nested levels and an optional type, or "
                         "2) an existing dict to be converted into a nested dict "
                         "(factory = %s. len(param) = %d, param = %s"

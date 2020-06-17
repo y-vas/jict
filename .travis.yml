@@ -14,6 +14,6 @@ install:
 
 script: 
   - flake8
-  - nosetests --with-coverage --cover-package nested_dict
+  - nosetests --with-coverage --cover-package jict
               --cover-inclusive --cover-min-percentage 85
   - if [[ $TRAVIS_PYTHON_VERSION != pypy3 ]]; then make -C docs html; fi
