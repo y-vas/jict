@@ -19,8 +19,7 @@ class jict(defaultdict):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
             return dt
-
-        return jict()
+        return self
 
     def __init__(self, nd = None):
         self.factory = jict
