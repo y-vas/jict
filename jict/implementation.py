@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-"""`jict` provides dictionaries with multiple levels of nested-ness."""
 from __future__ import print_function
 from __future__ import division
 
