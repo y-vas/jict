@@ -45,8 +45,18 @@ class jict(defaultdict):
 
     def __iter__(self):
         if self.generator != None:
-            for x in self.generator:
-                yield x
+            if hasattr(self.generator, count):
+                cnt = self.generator.conunt()
+                c = 0
+                for x in self.generator:
+                    c += 1
+                    ps = 100 / cnt * c
+                    print ( "Loading ("+ps+'%)' + "." * int(ps) , end="\r")
+                    yield to_jict(x)
+            else:
+                for x in self.generator:
+                    yield to_jict(x)
+
 
     def dict(self, input_dict=None ):
         plain_dict = dict()
