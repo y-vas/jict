@@ -3,7 +3,7 @@
 (Only works well for scalars)
 
 
-	nd= nested_dict()                                   
+	nd= jict()                                   
 	nd["mouse"]["chr1"]["+"] = 311                      
 	nd["mouse"]["chromosomes"]="completed"              
 	nd["mouse"]["chr2"] = "2nd longest"                             
@@ -16,15 +16,15 @@
 (Especially useful for containers)
 
 	# two levels of nesting
-	nd2 = nested_dict(2, list)
+	nd2 = jict(2, list)
 	nd2["mouse"]["chr2"].append(12)
 	
 	# three levels of nesting
-	nd3 = nested_dict(3, set)
+	nd3 = jict(3, set)
 	nd3["mouse"]["chr2"]["categorised"].add(3)
 	
 	# counts
-	nd4 = nested_dict(2, int)
+	nd4 = jict(2, int)
 	nd4["mouse"]["chr2"]+=4
 	nd4["human"]["chr1"]+=3
 	nd4["human"]["chr3"]+=4

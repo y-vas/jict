@@ -4,10 +4,10 @@
     * Documentation at http://nested-dict.readthedocs.org
 
 ##############################################################################
-``nested_dict``
+``jict``
 ##############################################################################
 
-    ``nested_dict`` is a drop-in replacement extending python `dict  <https://docs.python.org/2/library/stdtypes.html#typesmapping>`__ and
+    ``jict`` is a drop-in replacement extending python `dict  <https://docs.python.org/2/library/stdtypes.html#typesmapping>`__ and
     `defaultdict  <https://docs.python.org/2/library/collections.html#collections.defaultdict>`__
     with multiple levels of nesting.
 
@@ -17,7 +17,7 @@
 
       .. code-block:: Pycon
 
-        >>> nd= nested_dict()
+        >>> nd= jict()
         >>> # magic
         >>> nd["one"][2]["three"] = 4
 
@@ -47,7 +47,7 @@ Specifying the contained type
     .. code-block:: Python
 
             #   nested dict of lists
-            nd = nested_dict(2, list)
+            nd = jict(2, list)
             nd["mouse"]["2"].append(12)
             nd["human"]["1"].append(12)
 
@@ -63,7 +63,7 @@ Specifying the contained type
     .. code-block:: Python
 
             #   nested dict of sets
-            nd = nested_dict(2, set)
+            nd = jict(2, set)
             nd["mouse"]["2"].add("a")
             nd["human"]["1"].add("b")
 
@@ -80,7 +80,7 @@ Specifying the contained type
     .. code-block:: Python
 
             #   nested dict of ints
-            nd = nested_dict(2, int)
+            nd = jict(2, int)
             nd["mouse"]["2"] += 4
             nd["human"]["1"] += 5
             nd["human"]["1"] += 6
@@ -101,7 +101,7 @@ Specifying the contained type
     .. code-block:: Python
 
             #   nested dict of strings
-            nd = nested_dict(2, str)
+            nd = jict(2, str)
             nd["mouse"]["2"] += "a" * 4
             nd["human"]["1"] += "b" * 5
             nd["human"]["1"] += "c" * 6
@@ -113,7 +113,7 @@ Specifying the contained type
         Python
 
 ##############################################################################
-Iterating through ``nested_dict``
+Iterating through ``jict``
 ##############################################################################
 
 Iterating through deep or unevenly nested dictionaries is a bit of a pain without recursion.
@@ -125,8 +125,8 @@ You do not need to know beforehand how many levels of nesting you have:
 
     .. code-block:: Python
 
-        from nested_dict import nested_dict
-        nd= nested_dict()
+        from jict import jict
+        nd= jict()
         nd["one"] = "1"
         nd[1]["two"] = "1 / 2"
         nd["uno"][2]["three"] = "1 / 2 / 3"
@@ -143,7 +143,7 @@ You do not need to know beforehand how many levels of nesting you have:
 
 
 
-nested_dict provides
+jict provides
     * :ref:`items_flat() <items_flat>`
     * :ref:`keys_flat() <keys_flat>`
     * :ref:`values_flat() <values_flat>`
@@ -154,23 +154,23 @@ nested_dict provides
 Converting to / from ``dict``
 ##############################################################################
 
-The magic of  ``nested_dict`` sometimes gets in the way (of `pickle  <https://docs.python.org/2/library/pickle.html>`__\ ing for example).
+The magic of  ``jict`` sometimes gets in the way (of `pickle  <https://docs.python.org/2/library/pickle.html>`__\ ing for example).
 
 We can convert to and from a vanilla python ``dict`` using
-    * :ref:`nested_dict.to_dict() <to_dict>`
-    * :ref:`the nested_dict constructor <nested_dict.init>`
+    * :ref:`jict.to_dict() <to_dict>`
+    * :ref:`the jict constructor <jict.init>`
 
     .. <<Python
 
     .. code-block:: Pycon
 
-        >>> from nested_dict import nested_dict
-        >>> nd= nested_dict()
+        >>> from jict import jict
+        >>> nd= jict()
         >>> nd["one"] = 1
         >>> nd[1]["two"] = "1 / 2"
 
         #
-        #   convert nested_dict -> dict and pickle
+        #   convert jict -> dict and pickle
         #
         >>> nd.to_dict()
         {1: {'two': '1 / 2'}, 'one': 1}
@@ -178,10 +178,10 @@ We can convert to and from a vanilla python ``dict`` using
         >>> binary_representation = pickle.dumps(nd.to_dict())
 
         #
-        #   convert dict -> nested_dict
+        #   convert dict -> jict
         #
         >>> normal_dict = pickle.loads(binary_representation)
-        >>> new_nd = nested_dict(normal_dict)
+        >>> new_nd = jict(normal_dict)
         >>> nd == new_nd
         True
 
@@ -192,18 +192,18 @@ We can convert to and from a vanilla python ``dict`` using
 Updating with another dictionary
 ##############################################################################
 
-    You can use the ``nested_dict.update(other)`` method to merge in the contents of another dictionary.
+    You can use the ``jict.update(other)`` method to merge in the contents of another dictionary.
 
-    If the ``nested_dict`` has a fixed nesting and a **value type**, then key / value pairs will be overridden 
+    If the ``jict`` has a fixed nesting and a **value type**, then key / value pairs will be overridden 
     from the other dict like in Python's standard library ``dict``. Otherwise they will be preserved as far as possible.
 
-    For example, given a three-level nested ``nested_dict`` of ``int``:
+    For example, given a three-level nested ``jict`` of ``int``:
 
             .. <<Python
 
             .. code-block:: Python
 
-                >>> d1 = nested_dict.nested_dict(3, int)
+                >>> d1 = jict.jict(3, int)
                 >>> d1[1][2][3] = 4
                 >>> d1[1][2][4] = 5
 
@@ -218,14 +218,14 @@ Updating with another dictionary
                 Python
 
 
-        We can update this with any dictionary, not necessarily a three level ``nested_dict`` of ``int``.
+        We can update this with any dictionary, not necessarily a three level ``jict`` of ``int``.
 
             .. <<Python
 
             .. code-block:: pycon
 
-                >>> # some other nested_dict
-                >>> d2 = nested_dict.nested_dict()
+                >>> # some other jict
+                >>> d2 = jict.jict()
                 >>> d2[2][3][4][5] = 6
                 >>> d1.update(d2)
                 >>> print (d1.to_dict())
@@ -252,7 +252,7 @@ Updating with another dictionary
 ##############################################################################
 ``defaultdict``
 ##############################################################################
-``nested_dict`` extends `collections.defaultdict  <https://docs.python.org/2/library/collections.html#collections.defaultdict>`__
+``jict`` extends `collections.defaultdict  <https://docs.python.org/2/library/collections.html#collections.defaultdict>`__
 
 You can get arbitrarily-nested "auto-vivifying" dictionaries using `defaultdict  <https://docs.python.org/2/library/collections.html#collections.defaultdict>`__.
 
@@ -261,19 +261,19 @@ You can get arbitrarily-nested "auto-vivifying" dictionaries using `defaultdict 
     .. code-block:: Python
 
         from collections import defaultdict
-        nested_dict = lambda: defaultdict(nested_dict)
-        nd = nested_dict()
+        jict = lambda: defaultdict(jict)
+        nd = jict()
         nd[1][2]["three"][4] = 5
         nd["one"]["two"]["three"][4] = 5
 
     ..
         Python
 
-However, only ``nested_dict`` supports a ``dict`` of ``dict`` of ``sets`` etc.
+However, only ``jict`` supports a ``dict`` of ``dict`` of ``sets`` etc.
 
 
 .. toctree::
    :titlesonly:
    :name: class documentation
 
-   nested_dict.rst
+   jict.rst

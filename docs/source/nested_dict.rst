@@ -1,19 +1,19 @@
 #####################
-nested_dict
+jict
 #####################
 
-.. automodule:: nested_dict
+.. automodule:: jict
 
 **************************
 Class documentation
 **************************
-.. class:: nested_dict
+.. class:: jict
 
-.. _nested_dict.init:
+.. _jict.init:
 
-    .. method:: nested_dict.__init__([existing_dict | nested_level, value_type])
+    .. method:: jict.__init__([existing_dict | nested_level, value_type])
 
-        :param existing_dict: an existing ``dict`` to be converted into a ``nested_dict``
+        :param existing_dict: an existing ``dict`` to be converted into a ``jict``
         :param nested_level: the level of nestedness in the dictionary
         :param value_type: the type of the values held in the dictionary
 
@@ -23,10 +23,10 @@ Class documentation
 
             .. code-block:: Python
 
-                a = nested_dict(3, list)
+                a = jict(3, list)
                 a['level 1']['level 2']['level 3'].append(1)
 
-                b = nested_dict(2, int)
+                b = jict(2, int)
                 b['level 1']['level 2']+=3
 
             ..
@@ -39,20 +39,20 @@ Class documentation
 
             .. code-block:: Python
 
-                a = nested_dict()
+                a = jict()
                 a['1']['2']['3'] = 3
                 a['A']['B'] = 15
 
             ..
                 Python
 
-.. _nested_dict.update:
+.. _jict.update:
 
     .. method:: update(other)
 
         Updates the dictionary recursively with the key/value pairs from other, overwriting existing keys. Return None.
 
-        If the nested_dict has a fixed level of nestedness and a value_type, then this is ignored for the key/value
+        If the jict has a fixed level of nestedness and a value_type, then this is ignored for the key/value
         pairs from other but otherwise preserved as far as possible.
 
 
@@ -72,8 +72,8 @@ Class documentation
 
             .. code-block:: Python
 
-                from nested_dict import nested_dict
-                a = nested_dict()
+                from jict import jict
+                a = jict()
                 a['1']['2']['3'] = 3
                 a['A']['B'] = 15
 
@@ -103,8 +103,8 @@ Class documentation
 
             .. code-block:: Python
 
-                from nested_dict import nested_dict
-                a = nested_dict()
+                from jict import jict
+                a = jict()
                 a['1']['2']['3'] = 3
                 a['A']['B'] = 15
 
@@ -132,8 +132,8 @@ Class documentation
 
             .. code-block:: Python
 
-                from nested_dict import nested_dict
-                a = nested_dict()
+                from jict import jict
+                a = jict()
                 a['1']['2']['3'] = 3
                 a['A']['B'] = 15
 
@@ -155,8 +155,8 @@ Class documentation
 
             .. code-block:: Python
 
-                from nested_dict import nested_dict
-                a = nested_dict()
+                from jict import jict
+                a = jict()
                 a['1']['2']['3'] = 3
                 a['A']['B'] = 15
 
@@ -177,8 +177,8 @@ Class documentation
 
             .. code-block:: Python
 
-                from nested_dict import nested_dict
-                a = nested_dict()
+                from jict import jict
+                a = jict()
                 a['1']['2']['3'] = 3
                 a['A']['B'] = 15
 

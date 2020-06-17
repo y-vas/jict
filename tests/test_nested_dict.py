@@ -1,4 +1,4 @@
-"""Test module for nested_dict."""
+"""Test module for jict."""
 from __future__ import print_function
 
 
@@ -7,18 +7,18 @@ import sys
 import os
 
 
-# make sure which nested_dict we are testing
+# make sure which jict we are testing
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, parent_dir)
 
 
-class Test_nested_dict_constructor(unittest.TestCase):
-    """Test nested_dict constructor parameters."""
+class Test_jict_constructor(unittest.TestCase):
+    """Test jict constructor parameters."""
 
     def test_default(self):
         """Test constructor without parameters."""
-        from nested_dict import nested_dict
-        nd = nested_dict()
+        from jict import jict
+        nd = jict()
         nd['new jersey']['mercer county']['plumbers'] = 3
         nd['new jersey']['mercer county']['programmers'] = 81
         nd['new jersey']['middlesex county']['programmers'] = 81
@@ -44,9 +44,9 @@ class Test_nested_dict_constructor(unittest.TestCase):
         #
         #   Maximum of four levels
         #
-        import nested_dict
+        import jict
         try:
-            nd3 = nested_dict.nested_dict(1, 2, 3)
+            nd3 = jict.jict(1, 2, 3)
             self.assertTrue("Should have throw assertion before getting here")
             # just so flake8 stops complaining!
             nd3[1][2][3] = "b"
@@ -55,9 +55,9 @@ class Test_nested_dict_constructor(unittest.TestCase):
         #
         #   levels not int
         #
-        import nested_dict
+        import jict
         try:
-            nd2 = nested_dict.nested_dict("a", "b")
+            nd2 = jict.jict("a", "b")
             self.assertTrue("Should have throw assertion before getting here")
             # just so flake8 stops complaining!
             nd2[1][2] = "b"
@@ -69,8 +69,8 @@ class Test_nested_dict_constructor(unittest.TestCase):
         #
         #   Maximum of four levels
         #
-        import nested_dict
-        nd4 = nested_dict.nested_dict(4)
+        import jict
+        nd4 = jict.jict(4)
         # OK: Assign to "string"
         nd4[1][2][3][4] = "a"
 
@@ -81,7 +81,7 @@ class Test_nested_dict_constructor(unittest.TestCase):
         except KeyError:
             pass
 
-        nd2 = nested_dict.nested_dict(2)
+        nd2 = jict.jict(2)
         # OK: Assign to "string"
         nd2[1][2] = "a"
 
@@ -94,8 +94,8 @@ class Test_nested_dict_constructor(unittest.TestCase):
 
     def test_list(self):
         """Test with nested type of `list`."""
-        import nested_dict
-        nd = nested_dict.nested_dict(2, list)
+        import jict
+        nd = jict.jict(2, list)
         nd['new jersey']['mercer county'].append('plumbers')
         nd['new jersey']['mercer county'].append('programmers')
         nd['new jersey']['middlesex county'].append('salesmen')
@@ -130,64 +130,64 @@ class Test_nested_dict_constructor(unittest.TestCase):
                               "new york": {"queens county": ["cricketers"]}})
 
 
-class Test_nested_dict_methods(unittest.TestCase):
-    """Test methods of nested_dict."""
+class Test_jict_methods(unittest.TestCase):
+    """Test methods of jict."""
 
     def test_iteritems_flat(self):
         """Test iteritems_flat method."""
-        import nested_dict
-        a = nested_dict.nested_dict()
+        import jict
+        a = jict.jict()
         a['1']['2']['3'] = 3
         a['A']['B'] = 15
         self.assertEqual(sorted(a.iteritems_flat()), [(('1', '2', '3'), 3), (('A', 'B'), 15)])
 
     def test_iterkeys_flat(self):
         """Test iterkeys_flat method."""
-        import nested_dict
-        a = nested_dict.nested_dict()
+        import jict
+        a = jict.jict()
         a['1']['2']['3'] = 3
         a['A']['B'] = 15
         self.assertEqual(sorted(a.iterkeys_flat()), [('1', '2', '3'), ('A', 'B')])
 
     def test_itervalues_flat(self):
         """Test itervalues_flat method."""
-        import nested_dict
-        a = nested_dict.nested_dict()
+        import jict
+        a = jict.jict()
         a['1']['2']['3'] = 3
         a['A']['B'] = 15
         self.assertEqual(sorted(a.itervalues_flat()), [3, 15])
 
     def test_to_dict(self):
         """Test to_dict method."""
-        import nested_dict
-        a = nested_dict.nested_dict()
+        import jict
+        a = jict.jict()
         a['1']['2']['3'] = 3
         a['A']['B'] = 15
 
         normal_dict = a.to_dict()
         self.assertEqual(normal_dict, {'1': {'2': {'3': 3}}, 'A': {'B': 15}})
 
-        b = nested_dict.nested_dict(normal_dict)
+        b = jict.jict(normal_dict)
         self.assertEqual(b, {'1': {'2': {'3': 3}}, 'A': {'B': 15}})
 
     def test_str(self):
         """Test __str__ method."""
-        import nested_dict
+        import jict
         import json
-        a = nested_dict.nested_dict()
+        a = jict.jict()
         a['1']['2']['3'] = 3
         a['A']['B'] = 15
         self.assertEqual(json.loads(str(a)), {'1': {'2': {'3': 3}}, 'A': {'B': 15}})
 
     def test_update(self):
         """Test update method."""
-        import nested_dict
+        import jict
 
         #
         #   nested dictionary updates
         #
-        d1 = nested_dict.nested_dict()
-        d2 = nested_dict.nested_dict()
+        d1 = jict.jict()
+        d2 = jict.jict()
         d1[1][2][3] = 4
         d2[1][2][4] = 5
         d1.update(d2)
@@ -197,7 +197,7 @@ class Test_nested_dict_methods(unittest.TestCase):
         #
         #   dictionary updates
         #
-        d1 = nested_dict.nested_dict()
+        d1 = jict.jict()
         d2 = {1: {2: {4: 5}}}
         d1[1][2][3] = 4
         d2[1][2][4] = 5
@@ -208,8 +208,8 @@ class Test_nested_dict_methods(unittest.TestCase):
         #
         #   scalar overwrites
         #
-        d1 = nested_dict.nested_dict()
-        d2 = nested_dict.nested_dict()
+        d1 = jict.jict()
+        d2 = jict.jict()
         d1[1][2][3] = 4
         d2[1][2] = 5
         d1.update(d2)
@@ -217,10 +217,10 @@ class Test_nested_dict_methods(unittest.TestCase):
         self.assertEqual(d1.to_dict(), {1: {2: 5}})
 
         #
-        #   updates try to preserve the sort of nested_dict
+        #   updates try to preserve the sort of jict
         #
-        d1 = nested_dict.nested_dict(3, int)
-        d2 = nested_dict.nested_dict()
+        d1 = jict.jict(3, int)
+        d2 = jict.jict()
         d1[1][2][3] = 4
         d1[1][2][4] = 5
         d2[2][3][4][5] = 6
@@ -231,9 +231,9 @@ class Test_nested_dict_methods(unittest.TestCase):
         self.assertEqual(d1[2][3][5], 0)
 
         #
-        #   updates try to preserve the sort of nested_dict
+        #   updates try to preserve the sort of jict
         #
-        d1 = nested_dict.nested_dict(3, list)
+        d1 = jict.jict(3, list)
         d2 = {2: {3: {4: {5: 6}}}}
         d1[1][2][3].append(4)
         d1[1][2][4].append(4)
