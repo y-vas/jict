@@ -6,6 +6,9 @@ from collections import defaultdict
 import sys, json
 from bson import ObjectId
 
+if 'pymongo' in sys.modules:
+    from pymongo.cursor import Cursor
+
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
@@ -26,6 +29,12 @@ class jict(defaultdict):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
             return dt
+
+        if 'pymongo' in sys.modules:
+            if isinstance(nd, Cursor):
+                self.generator = nd
+                return next( self.generator )
+
         return super(jict, self).__new__(self, nd)
 
     def __init__(self, nd = None):
@@ -45,11 +54,8 @@ class jict(defaultdict):
                 plain_dict[key] = value
         return plain_dict
 
-    # def __str__(self):
-        # return json.dumps( self.dict() , indent = 2 , cls= JSONEncoder )
+    def __str__(self):
+        return json.dumps( self.dict() , indent = 2 , cls= JSONEncoder )
 
     def json(self,indent=2):
         return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
-
-    def __lshift__(a, b):
-        a = b.dict()
