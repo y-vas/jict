@@ -19,7 +19,7 @@ class jict(defaultdict):
             input_dict = self
         for key in input_dict.keys():
             value = input_dict[key]
-            if isinstance(value, _recursive_dict):
+            if isinstance(value, jict):
                 # print "recurse", value
                 plain_dict[key] = self.dict(value)
             else:
