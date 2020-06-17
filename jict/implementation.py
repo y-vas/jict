@@ -23,11 +23,11 @@ class jict(defaultdict):
 
     def __init__(self):
         if isinstance( nd, dict ):
-            self = to_jict(nd)
+            dt = to_jict(nd)
+            dt.__init__(self)
             return
-            # dt = to_jict(nd)
-            # dt.__init__(self)
-            # return
+
+
         self.factory = jict
         defaultdict.__init__(self, self.factory)
 
