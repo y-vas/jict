@@ -15,19 +15,12 @@ def to_jict(prev):
     return nd
 
 class jict(defaultdict):
-    # def __new__(self, nd = None ):
-    #
-    #
-    #     self.factory = jict
-    #     return defaultdict.__init__(self, self.factory)
-
-    def __init__(self):
+    def __new__(self, nd = None ):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
-            dt.__init__(self)
-            return
+            return dt
 
-
+    def __init__(self, nd = None):
         self.factory = jict
         defaultdict.__init__(self, self.factory)
 
