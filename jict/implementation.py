@@ -5,9 +5,9 @@ from __future__ import division
 from collections import defaultdict
 import sys, json
 
-def to_jict(dict):
+def to_jict(prev):
     nd = jict()
-    for k,i in dict.items():
+    for k,i in prev.items():
         if isinstance(i,dict):
             nd[k] = to_jict(i)
         else:
@@ -17,7 +17,7 @@ def to_jict(dict):
 class jict(defaultdict):
 
     def __init__(self, nd = None ):
-        if isinstance(nd,dict):
+        if isinstance( nd, dict ):
             self = to_jict(nd)
             return
 
