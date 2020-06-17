@@ -5,9 +5,22 @@ from __future__ import division
 from collections import defaultdict
 import sys, json
 
+def to_jict(dict):
+    nd = jdict()
+    for k,i in dict.items():
+        if isinstance(i,dict):
+            nd[k] = to_jict(i)
+        else:
+            nd[k] = i
+    return nd
+
 class jict(defaultdict):
 
     def __init__(self, nd = None ):
+        if isinstance(nd,dict):
+            self = to_dict(nd)
+            return
+
         self.factory = jict
         defaultdict.__init__(self, self.factory)
 
