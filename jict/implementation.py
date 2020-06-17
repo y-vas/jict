@@ -43,6 +43,11 @@ class jict(defaultdict):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
 
+    def __iter__(self):
+        if self.generator != None:
+            for x in self.generator:
+                yield x
+
     def dict(self, input_dict=None ):
         plain_dict = dict()
         if input_dict is None:
