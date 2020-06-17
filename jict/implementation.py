@@ -35,8 +35,11 @@ class jict(defaultdict):
 
         if 'pymongo' in sys.modules:
             if isinstance(nd, Cursor):
-                jt = jict( next(nd) ,verbose )
-                jt.generator = nd
+                try:
+                    jt = jict( next(nd) ,verbose )
+                    jt.generator = nd
+                except:
+                    jt = jict()
                 return jt
 
         return super(jict, self).__new__(self, nd, verbose )
@@ -55,7 +58,7 @@ class jict(defaultdict):
                 c = 0
                 if not started:
                     started = True
-                    yield self
+                    yield jict(self.dict())
 
                 for x in self.generator:
                     ps = 100 / cnt * c
