@@ -11,7 +11,6 @@ class jict(defaultdict):
         self.factory = jict
         defaultdict.__init__(self, self.factory)
 
-
     def dict(self, input_dict=None ):
         plain_dict = dict()
         if input_dict is None:
