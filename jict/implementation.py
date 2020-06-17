@@ -18,9 +18,9 @@ class jict(defaultdict):
     def __new__(self,nd = None):
         if isinstance( nd, dict ):
             return to_jict(nd)
-            
+
         self.factory = jict
-        defaultdict.__init__(self, self.factory)
+        return defaultdict.__init__(self, self.factory)
 
     def __init__(self):
         self.factory = jict
