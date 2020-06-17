@@ -12,7 +12,6 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         return json.JSONEncoder.default(self, o)
 
-
 def to_jict(prev):
     nd = jict()
     for k,i in prev.items():
@@ -27,12 +26,11 @@ class jict(defaultdict):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
             return dt
-
         return super(jict, self).__new__(self, nd)
 
     def __init__(self, nd = None):
         self.factory = jict
-        defaultdict.__init__(self, self.factory)
+        defaultdict.__init__( self, self.factory )
 
     def dict(self, input_dict=None ):
         plain_dict = dict()
@@ -47,5 +45,11 @@ class jict(defaultdict):
                 plain_dict[key] = value
         return plain_dict
 
-    def __str__(self):
-        return json.dumps(self.dict(), indent = 2 , cls=JSONEncoder )
+    # def __str__(self):
+        # return json.dumps( self.dict() , indent = 2 , cls= JSONEncoder )
+
+    def json(self,indent=2):
+        return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
+
+    def __lshift__(a, b):
+        a = b.dict()
