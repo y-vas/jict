@@ -55,7 +55,7 @@ setup(
     url="http://pypi.python.org/pypi/jict",
     install_requires=[],
     setup_requires=[],
-    keywords=["nested", "dict", "defaultdict", "dictionary", "auto-vivification"],
+    keywords=["nested", "jict", "defaultdict", "dictionary", "auto-vivification"],
     license="MIT",
 
     classifiers=[
