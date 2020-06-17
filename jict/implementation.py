@@ -7,36 +7,36 @@ from collections import defaultdict
 import sys, json
 
 
-def flatten_nested_items(dictionary):
-    """
-    Flatten a jict.
-
-    iterate through nested dictionary (with iterkeys() method)
-         and return with nested keys flattened into a tuple
-    """
-    if sys.hexversion < 0x03000000:
-        keys = dictionary.iterkeys
-        keystr = "iterkeys"
-    else:
-        keys = dictionary.keys
-        keystr = "keys"
-    for key in keys():
-        value = dictionary[key]
-        if hasattr(value, keystr):
-            for keykey, value in flatten_nested_items(value):
-                yield (key,) + keykey, value
-        else:
-            yield (key,), value
+# def flatten_nested_items(dictionary):
+#     """
+#     Flatten a jict.
+#
+#     iterate through nested dictionary (with iterkeys() method)
+#          and return with nested keys flattened into a tuple
+#     """
+#     if sys.hexversion < 0x03000000:
+#         keys = dictionary.iterkeys
+#         keystr = "iterkeys"
+#     else:
+#         keys = dictionary.keys
+#         keystr = "keys"
+#     for key in keys():
+#         value = dictionary[key]
+#         if hasattr(value, keystr):
+#             for keykey, value in flatten_nested_items(value):
+#                 yield (key,) + keykey, value
+#         else:
+#             yield (key,), value
 
 
 class _recursive_dict(defaultdict):
 
 
 
-    def iteritems_flat(self):
-        """Iterate through items with nested keys flattened into a tuple."""
-        for key, value in flatten_nested_items(self):
-            yield key, value
+    # def iteritems_flat(self):
+    #     """Iterate through items with nested keys flattened into a tuple."""
+    #     for key, value in flatten_nested_items(self):
+    #         yield key, value
 
 
     #
@@ -53,25 +53,21 @@ class _recursive_dict(defaultdict):
     #     return self._dtd(self)
 
 
-    def iterkeys_flat(self):
-        """Iterate through keys with nested keys flattened into a tuple."""
-        for key, value in flatten_nested_items(self):
-            yield key
-
-    def itervalues_flat(self):
-        """Iterate through values with nested keys flattened into a tuple."""
-        for key, value in flatten_nested_items(self):
-            yield value
+    # def iterkeys_flat(self):
+    #     """Iterate through keys with nested keys flattened into a tuple."""
+    #     for key, value in flatten_nested_items(self):
+    #         yield key
+    #
+    # def itervalues_flat(self):
+    #     """Iterate through values with nested keys flattened into a tuple."""
+    #     for key, value in flatten_nested_items(self):
+    #         yield value
 
     items_flat = iteritems_flat
     keys_flat = iterkeys_flat
     values_flat = itervalues_flat
 
-    def to_dict(self, input_dict=None):
-        """Convert the nested dictionary to a nested series of standard ``dict`` objects."""
-        #
-        # Calls itself recursively to unwind the dictionary.
-        # Use to_dict() to start at the top level of nesting
+    def dict(self, input_dict=None):
         plain_dict = dict()
         if input_dict is None:
             input_dict = self
@@ -79,16 +75,14 @@ class _recursive_dict(defaultdict):
             value = input_dict[key]
             if isinstance(value, _recursive_dict):
                 # print "recurse", value
-                plain_dict[key] = self.to_dict(value)
+                plain_dict[key] = self.dict(value)
             else:
                 # print "plain", value
                 plain_dict[key] = value
         return plain_dict
 
-    def __str__(self, indent=None):
-        """Representation of self as a string."""
-        import json
-        return json.dumps(self.to_dict(), indent=indent)
+    def __str__(self):
+        return json.dumps(self.dict(), indent = 2 )
 
 def _nested_levels( level, nested_type ):
     """Helper function to create a specified degree of nested dictionaries."""
@@ -114,24 +108,24 @@ def jict_from_dict(orig_dict, nd):
             nd[key] = value
     return nd
 
-def _recursive_update(nd, other):
-    for key, value in iteritems(other):
-        if isinstance(value, (dict,)):
-            if isinstance(nd[key], (_recursive_dict,)):
-                _recursive_update(nd[key], other[key])
-            elif isinstance(nd[key], (dict,)):
-                nd[key].update(other[key])
-            else:
-                nd[key] = value
-        else:
-            nd[key] = value
-    return nd
+# def _recursive_update(nd, other):
+#     for key, value in iteritems(other):
+#         if isinstance(value, (dict,)):
+#             if isinstance(nd[key], (_recursive_dict,)):
+#                 _recursive_update(nd[key], other[key])
+#             elif isinstance(nd[key], (dict,)):
+#                 nd[key].update(other[key])
+#             else:
+#                 nd[key] = value
+#         else:
+#             nd[key] = value
+#     return nd
 
 class jict(_recursive_dict):
 
-    def update(self, other):
-        """Update recursively."""
-        _recursive_update(self, other)
+    # def update(self, other):
+    #     """Update recursively."""
+    #     _recursive_update(self, other)
 
     def __init__(self, *param, **named_param ):
         """
