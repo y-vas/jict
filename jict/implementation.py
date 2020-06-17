@@ -25,6 +25,7 @@ def to_jict(prev):
     return nd
 
 class jict(defaultdict):
+    generator = None
     def __new__(self, nd = None ):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
@@ -32,10 +33,10 @@ class jict(defaultdict):
 
         if 'pymongo' in sys.modules:
             if isinstance(nd, Cursor):
-                jt = to_jict(next( self.generator ))
+                jt = to_jict( next(nd) )
                 jt.generator = nd
                 return jt
-                
+
         return super(jict, self).__new__(self, nd)
 
     def __init__(self, nd = None):
