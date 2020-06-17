@@ -20,6 +20,8 @@ class jict(defaultdict):
             dt = to_jict(nd)
             return dt
 
+        return jict()
+
     def __init__(self, nd = None):
         self.factory = jict
         defaultdict.__init__(self, self.factory)
