@@ -78,7 +78,25 @@ class jict(defaultdict):
         if key in self.keys():
             return self[key]
         self[key] = deft
-        return deft
+        return self[key]
+
+    def increase(self,key,val,create = False ):
+        if key not in self.keys():
+            if not create: return self[key]
+            else:
+                self[key] = val
+                return self[key]
+        self[key] = val if val > self[key] else self[key]
+        return self[key]
+
+    def decrease(self,key,val,create = False ):
+        if key not in self.keys():
+            if not create: return self[key]
+            else:
+                self[key] = val
+                return self[key]
+        self[key] = val if val < self[key] else self[key]
+        return self[key]
 
     def dict(self, input_dict=None ):
         plain_dict = dict()
