@@ -24,7 +24,7 @@ def to_jict(prev):
             nd[k] = i
     return nd
 
-class jict(defaultdict):
+class jict( defaultdict ):
     generator = None
     verbose = False
     def __new__(self, nd = None ,verbose = False):
