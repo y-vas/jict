@@ -58,11 +58,11 @@ class jict(defaultdict):
                 c = 0
                 if not started:
                     started = True
-                    yield jict(self.dict())
+                    yield jict( self.dict() )
 
                 for x in self.generator:
                     ps = 100 / cnt * c
-                    print ( "Loading ("+str(ps)+'%)' + "." * int(ps) )
+                    print ( "Loading (" + str(ps) + '%)' + "." * int(ps) )
                     c += 1
                     yield to_jict(x)
 
