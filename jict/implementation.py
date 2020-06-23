@@ -111,7 +111,7 @@ class jict( defaultdict ):
                 self[x] = value
 
     def drop(self ,target = None):
-        for x in self.keys():
+        for x in list(self.dict()):
             val = self[x]
             if isinstance(val , jict):
                 val.drop( target )
