@@ -106,7 +106,7 @@ class jict( defaultdict ):
         for x in self.keys():
             val = self[x]
             if isinstance(val , jict):
-                val.change(target, value )
+                val._change(target, value )
             if x == target:
                 self[x] = value
 
