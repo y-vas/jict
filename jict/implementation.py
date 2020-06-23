@@ -98,6 +98,18 @@ class jict( defaultdict ):
         self[key] = val if val < self[key] else self[key]
         return self[key]
 
+    def rreplace(self, targets):
+        for k in targets.keys():
+            self._change(k,targets[k])
+
+    def _change(self, target , value ):
+        for x in self.keys():
+            val = self[x]
+            if isinstance(val , jict):
+                val.change(target, value )
+            if x == target:
+                self[x] = value
+
     def dict(self, input_dict=None ):
         plain_dict = dict()
         if input_dict is None:
@@ -105,9 +117,9 @@ class jict( defaultdict ):
         for key in input_dict.keys():
             value = input_dict[key]
             if isinstance(value, jict):
-                plain_dict[key] = self.dict(value)
+                plain_dict[ key ] = self.dict(value)
             else:
-                plain_dict[key] = value
+                plain_dict[ key ] = value
         return plain_dict
 
     def __str__(self):
