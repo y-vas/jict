@@ -17,7 +17,7 @@ def parse_version(module_file):
     match = re.findall("__version__ = '([^']+)'", s)
     return match[0]
 
-f = open(os.path.join(os.path.dirname(__file__), "README.rst"))
+f = open(os.path.join(os.path.dirname(__file__), "README.md"))
 jict_readme = f.read()
 f.close()
 jict_version = parse_version(os.path.join("jict", "__init__.py"))
