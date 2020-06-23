@@ -110,7 +110,7 @@ class jict( defaultdict ):
             if x == target:
                 self[x] = value
 
-    def drop(self ,target == None):
+    def drop(self ,target = None):
         for x in self.keys():
             val = self[x]
             if isinstance(val , jict):
