@@ -26,53 +26,52 @@ def to_jict(prev):
 
 class jict( defaultdict ):
     generator = None
-    verbose = False
-    def __new__(self, nd = None ,verbose = False):
+    name = None
+    def __new__(self, nd = None ):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
-            dt.verbose = verbose
+            return dt
+
+        if isinstance( nd, str ):
+            try:
+                dt = to_jict( json.loads( nd ) )
+            except:
+                dt = jict()
             return dt
 
         if 'pymongo' in sys.modules:
             if isinstance(nd, Cursor):
                 try:
-                    jt = jict( next(nd) ,verbose )
+                    jt = jict( next(nd) )
                     jt.generator = nd
                 except:
                     jt = jict()
                 return jt
 
-        return super(jict, self).__new__(self, nd, verbose )
+        if hasattr( nd, 'read' ):
+            try:
+                dt = to_jict( json.loads( nd.read() ) )
+                dt.name = nd.name
+            except:
+                dt = jict()
+            return dt
 
-    def __init__(self, nd = None, verbose = False ):
+        return super(jict, self).__new__(self, nd )
+
+    def __init__(self, nd = None ):
         self.factory = jict
-        self.verbose = verbose
         defaultdict.__init__( self, self.factory )
 
     def __iter__(self):
         started = False
 
         if self.generator != None:
-            if hasattr(self.generator, 'count') and self.verbose:
-                cnt = self.generator.count()
-                c = 0
-                if not started:
-                    started = True
-                    yield jict( self.dict() )
+            if not started:
+                started = True
+                yield jict(self.dict())
 
-                for x in self.generator:
-                    ps = 100 / cnt * c
-                    print ( "Loading (" + str(ps) + '%)' + "." * int(ps) )
-                    c += 1
-                    yield to_jict(x)
-
-            else:
-                if not started:
-                    started = True
-                    yield jict(self.dict())
-
-                for x in self.generator:
-                    yield to_jict(x)
+            for x in self.generator:
+                yield to_jict(x)
 
     def init(self,key,deft):
         if key in self.keys():
@@ -135,3 +134,11 @@ class jict( defaultdict ):
 
     def json(self,indent=2):
         return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
+
+    def save(self, name = None):
+        self.name = name if name != None else self.name \
+                    if self.name != None else 'jict.json'
+
+        f = open(self.name, "w")
+        f.write( self.json() )
+        f.close()
