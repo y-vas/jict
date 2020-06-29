@@ -146,10 +146,11 @@ class jict( defaultdict ):
         return yaml.dump(yaml.load(self.json()), default_flow_style=False)
 
     def save(self, name = None, tp = None ):
+        print( self.name )
+        
         self.name = name if name != None else self.name \
                     if self.name != None else 'jict.json'
 
-        print( self.name )
         nam, ext = os.path.splitext( self.name )
         tp = ext if tp == None else '.' + tp if not tp[0] == '.' else tp
         self.name = nam + tp
