@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict
-import sys, json
+import sys, json, os
 from bson import ObjectId
 
 if 'pymongo' in sys.modules:
@@ -34,7 +34,13 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
-                dt = to_jict( json.loads( nd ) )
+                if os.path.isfile( nd ):
+                    file = open( nd, "a+")
+                    dt = to_jict( json.loads( file.read() ) )
+                    dt.name = nd
+                    file.close()
+                else:
+                    dt = to_jict( json.loads( nd ) )
             except:
                 dt = jict()
             return dt
@@ -47,14 +53,6 @@ class jict( defaultdict ):
                 except:
                     jt = jict()
                 return jt
-
-        if hasattr( nd, 'read' ):
-            try:
-                dt = to_jict( json.loads( nd.read() ) )
-                dt.name = nd.name
-            except:
-                dt = jict()
-            return dt
 
         return super(jict, self).__new__(self, nd )
 
