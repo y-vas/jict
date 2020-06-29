@@ -36,10 +36,10 @@ class jict( defaultdict ):
             try:
                 if os.path.isfile( nd ):
                     nam, ext = os.path.splitext( nd )
-                    file = open( nd, "a+")
+                    file = open( nd, "a+" )
                     text = file.read()
                     file.close()
-
+                    print(text)
                     data = {}
                     if ext == '.yaml':
                         data = yaml.load( text )
@@ -147,7 +147,7 @@ class jict( defaultdict ):
 
     def save(self, name = None, tp = None ):
         print( self.name )
-        
+
         self.name = name if name != None else self.name \
                     if self.name != None else 'jict.json'
 
