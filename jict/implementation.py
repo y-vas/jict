@@ -154,5 +154,5 @@ class jict( defaultdict ):
         self.name = nam + tp
 
         f = open(self.name, "w+")
-        f.write( self.yaml() if tp == 'yaml' else self.json() )
+        f.write( self.yaml() if tp == '.yaml' else self.json() )
         f.close()
