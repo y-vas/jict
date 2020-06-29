@@ -55,8 +55,8 @@ class jict( defaultdict ):
                     print(dt.storepath , nd)
                 else:
                     dt = to_jict( json.loads( nd ) )
-            except:
-                print('nanaanna')
+            except Exception as e:
+                print(e)
                 dt = jict()
             return dt
 
