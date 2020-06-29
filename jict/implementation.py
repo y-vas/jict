@@ -37,7 +37,7 @@ class jict( defaultdict ):
             try:
                 if nd[-5:] in [ '.yaml' , '.json' ]:
                     if not os.path.exists( nd ):
-                        open( nd , 'w').close()
+                        open( nd , 'w+' ).close()
 
                     nam, ext = os.path.splitext( nd )
 
@@ -46,10 +46,12 @@ class jict( defaultdict ):
                     file.close()
 
                     data = {}
-                    if ext == '.yaml':
+                    if ext == '.yaml' and text.strip() != '':
                         data = yaml.safe_load( text )
                     elif ext == '.json':
                         data = json.loads(text )
+                    elif text.strip() == '':
+                        data = {}
 
                     dt = to_jict( data )
                     dt.storepath = nd
@@ -61,7 +63,7 @@ class jict( defaultdict ):
             return dt
 
         if 'pymongo' in sys.modules:
-            if isinstance(nd, Cursor):
+            if isinstance( nd, Cursor ):
                 try:
                     jt = jict( next(nd) )
                     jt.generator = nd
@@ -152,8 +154,6 @@ class jict( defaultdict ):
         return yaml.dump(yaml.full_load( self.json() ), default_flow_style=False)
 
     def save(self, name = None, tp = None ):
-        print( self.storepath )
-
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
 
