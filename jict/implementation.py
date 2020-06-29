@@ -140,6 +140,9 @@ class jict( defaultdict ):
         self.name = name if name != None else self.name \
                     if self.name != None else 'jict.json'
 
+        nam, ext = os.path.splitext( self.name )
+        self.name = self.name + '.' + tp
+
         f = open(self.name, "w")
         f.write( self.yaml() if tp == 'yaml' else self.json() )
         f.close()
