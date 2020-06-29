@@ -27,7 +27,7 @@ def to_jict(prev):
 class jict( defaultdict ):
     generator = None
     name = ''
-    
+
     def __new__(self, nd = None ):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
@@ -52,6 +52,7 @@ class jict( defaultdict ):
 
                     dt = to_jict( data )
                     dt.name = nd
+                    print(dt.name)
                 else:
                     dt = to_jict( json.loads( nd ) )
             except:
