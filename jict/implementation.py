@@ -26,7 +26,7 @@ def to_jict(prev):
 
 class jict( defaultdict ):
     generator = None
-    name = ''
+    storepath = None
 
     def __new__(self, nd = None ):
         if isinstance( nd, dict ):
@@ -51,8 +51,8 @@ class jict( defaultdict ):
                         data = json.loads(text )
 
                     dt = to_jict( data )
-                    dt.name = nd
-                    print(dt.name)
+                    dt.storepath = nd
+                    print(dt.storepath , nd)
                 else:
                     dt = to_jict( json.loads( nd ) )
             except:
@@ -151,15 +151,15 @@ class jict( defaultdict ):
         return yaml.dump(yaml.load(self.json()), default_flow_style=False)
 
     def save(self, name = None, tp = None ):
-        print( self.name )
+        print( self.storepath )
 
-        self.name = name if name != None else self.name \
-                    if self.name != None else 'jict.json'
+        self.storepath = name if name != None else self.storepath \
+                    if self.storepath != None else 'jict.json'
 
-        nam, ext = os.path.splitext( self.name )
+        nam, ext = os.path.splitext( self.storepath )
         tp = ext if tp == None else '.' + tp if not tp[0] == '.' else tp
-        self.name = nam + tp
+        self.storepath = nam + tp
 
-        f = open(self.name, "w+")
+        f = open(self.storepath, "w+")
         f.write( self.yaml() if tp == '.yaml' else self.json() )
         f.close()
