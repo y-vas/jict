@@ -45,7 +45,7 @@ class jict( defaultdict ):
 
                     data = {}
                     if ext == '.yaml':
-                        data = yaml.load( text )
+                        data = yaml.load( text, Loader=yaml.FullLoader)
                         print(data)
                     elif ext == '.json':
                         data = json.loads(text )
@@ -148,7 +148,7 @@ class jict( defaultdict ):
         return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
 
     def yaml(self):
-        return yaml.dump(yaml.load(self.json()), default_flow_style=False)
+        return yaml.dump(yaml.load(self.json() , Loader=yaml.FullLoader ), default_flow_style=False)
 
     def save(self, name = None, tp = None ):
         print( self.storepath )
