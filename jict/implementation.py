@@ -136,10 +136,10 @@ class jict( defaultdict ):
     def yaml(self):
         return yaml.dump(yaml.load(self.json()), default_flow_style=False)
 
-    def save(self, name = None):
+    def save(self, name = None, tp = 'json' ):
         self.name = name if name != None else self.name \
                     if self.name != None else 'jict.json'
 
         f = open(self.name, "w")
-        f.write( self.json() )
+        f.write( self.yaml() if tp == 'yaml' else self.json() )
         f.close()
