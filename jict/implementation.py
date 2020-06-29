@@ -45,7 +45,7 @@ class jict( defaultdict ):
                     if ext == '.yaml':
                         data = yaml.load( text )
                     elif ext == '.json':
-                        data = json.loads( text )
+                        data = json.loads(text )
 
                     dt = to_jict( data )
                     dt.name = nd
