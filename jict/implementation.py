@@ -45,6 +45,7 @@ class jict( defaultdict ):
 
                     data = {}
                     if ext == '.yaml':
+                        print(text)
                         data = yaml.safe_load( text )
                         print( 'dataloaded', data )
                     elif ext == '.json':
