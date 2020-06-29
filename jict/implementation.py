@@ -26,7 +26,8 @@ def to_jict(prev):
 
 class jict( defaultdict ):
     generator = None
-    name = None
+    name = ''
+    
     def __new__(self, nd = None ):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
@@ -34,6 +35,7 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
+                print(nd[-5:])
                 if nd[-5:] in [ '.yaml' , '.json' ]:
                     nam, ext = os.path.splitext( nd )
 
@@ -44,6 +46,7 @@ class jict( defaultdict ):
                     data = {}
                     if ext == '.yaml':
                         data = yaml.load( text )
+                        print(data)
                     elif ext == '.json':
                         data = json.loads(text )
 
