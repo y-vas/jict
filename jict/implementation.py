@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict
-import sys, json, os
+import sys, json,yaml, os
 from bson import ObjectId
 
 if 'pymongo' in sys.modules:
@@ -128,10 +128,13 @@ class jict( defaultdict ):
         return plain_dict
 
     def __str__(self):
-        return json.dumps( self.dict() , indent = 2 , cls= JSONEncoder )
+        return self.json()
 
     def json(self,indent=2):
         return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
+
+    def yaml(self):
+        return yaml.dump(yaml.load(self.json()), default_flow_style=False)
 
     def save(self, name = None):
         self.name = name if name != None else self.name \
