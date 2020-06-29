@@ -56,6 +56,7 @@ class jict( defaultdict ):
                 else:
                     dt = to_jict( json.loads( nd ) )
             except:
+                print('nanaanna')
                 dt = jict()
             return dt
 
