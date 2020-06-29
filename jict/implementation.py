@@ -35,10 +35,19 @@ class jict( defaultdict ):
         if isinstance( nd, str ):
             try:
                 if os.path.isfile( nd ):
+                    nam, ext = os.path.splitext( nd )
                     file = open( nd, "a+")
-                    dt = to_jict( json.loads( file.read() ) )
-                    dt.name = nd
+                    text = file.read()
                     file.close()
+
+                    data = {}
+                    if ext == '.yaml':
+                        data = yaml.load( text )
+                    elif ext == '.json':
+                        data = json.loads( text )
+
+                    dt = to_jict( data )
+                    dt.name = nd
                 else:
                     dt = to_jict( json.loads( nd ) )
             except:
@@ -141,7 +150,7 @@ class jict( defaultdict ):
                     if self.name != None else 'jict.json'
 
         nam, ext = os.path.splitext( self.name )
-        self.name = self.name + '.' + tp
+        self.name = nam + '.' + tp
 
         f = open(self.name, "w")
         f.write( self.yaml() if tp == 'yaml' else self.json() )
