@@ -94,6 +94,12 @@ class jict( defaultdict ):
         self[key] = deft
         return self[key]
 
+    def __iadd__(self, other):
+        typ = type(other)
+
+        if typ == int:
+            self = 0 + other
+
     def increase(self,key,val,create = False ):
         if key not in self.keys():
             if not create: return self[key]
