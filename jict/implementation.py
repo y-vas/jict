@@ -100,6 +100,8 @@ class jict( defaultdict ):
         if typ == int:
             self = 0 + other
 
+        return self
+        
     def increase(self,key,val,create = False ):
         if key not in self.keys():
             if not create: return self[key]
