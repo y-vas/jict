@@ -34,6 +34,7 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
+                print( nd )
                 if nd[-5] in ['.yaml','.json']:
                     nam, ext = os.path.splitext( nd )
 
