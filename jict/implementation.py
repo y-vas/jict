@@ -34,12 +34,13 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
-                if os.path.isfile( nd ):
+                if nd[-5] in ['.yaml','.json']:
                     nam, ext = os.path.splitext( nd )
+
                     file = open( nd, "a+" )
                     text = file.read()
                     file.close()
-                    print(text)
+
                     data = {}
                     if ext == '.yaml':
                         data = yaml.load( text )
