@@ -35,7 +35,6 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
-                print(nd[-5:])
                 if nd[-5:] in [ '.yaml' , '.json' ]:
                     if not os.path.exists( nd ):
                         open( nd , 'w').close()
@@ -48,15 +47,12 @@ class jict( defaultdict ):
 
                     data = {}
                     if ext == '.yaml':
-                        print( text )
                         data = yaml.safe_load( text )
-                        print( 'dataloaded', data )
                     elif ext == '.json':
                         data = json.loads(text )
 
                     dt = to_jict( data )
                     dt.storepath = nd
-                    print(dt.storepath , nd)
                 else:
                     dt = to_jict( json.loads( nd ) )
             except Exception as e:
@@ -153,7 +149,7 @@ class jict( defaultdict ):
         return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
 
     def yaml(self):
-        return yaml.dump(yaml.load(self.json() , Loader=yaml.FullLoader ), default_flow_style=False)
+        return yaml.dump(yaml.full_load( self.json() ), default_flow_style=False)
 
     def save(self, name = None, tp = None ):
         print( self.storepath )
