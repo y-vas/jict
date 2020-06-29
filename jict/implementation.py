@@ -4,7 +4,7 @@ from __future__ import division
 
 from collections import defaultdict
 import sys, json
-from bson import ObjectId
+from json import ObjectId
 
 if 'pymongo' in sys.modules:
     from pymongo.cursor import Cursor
