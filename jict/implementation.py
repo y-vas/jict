@@ -37,15 +37,18 @@ class jict( defaultdict ):
             try:
                 print(nd[-5:])
                 if nd[-5:] in [ '.yaml' , '.json' ]:
+                    if not os.path.exists( nd ):
+                        open( nd , 'w').close()
+
                     nam, ext = os.path.splitext( nd )
 
-                    file = open( nd, "a+" )
+                    file = open( nd, "r+" )
                     text = file.read()
                     file.close()
 
                     data = {}
                     if ext == '.yaml':
-                        print(text)
+                        print( text )
                         data = yaml.safe_load( text )
                         print( 'dataloaded', data )
                     elif ext == '.json':
