@@ -3,11 +3,14 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict
-import sys, json,yaml, os
+import sys, json,yaml, os, random
 from bson import ObjectId
 
 if 'pymongo' in sys.modules:
     from pymongo.cursor import Cursor
+
+if 'tensorflow' in sys.modules:
+    import tensorflow
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -99,6 +102,17 @@ class jict( defaultdict ):
 
         if typ == int:
             return 0 + other
+
+        if typ == dict:
+            other = jict(other)
+            typ = jict
+
+        if typ == jict:
+            for x in other.keys():
+                if not hasattr(self,x):
+                    self[x] = other[x]
+                else:
+                    self[x] += other[x]
 
         return self
 
