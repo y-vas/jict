@@ -94,7 +94,7 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
  * Method: SharedArray.create()
  */
 PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
-	static char *kwlist[] = { "name", "shape", "dtype", NULL };
+	static char *kwlist[] = { "name", "dtype", NULL };
 	const char *name;
 	PyArray_Dims shape = { NULL, 0 };
 	PyArray_Descr *dtype = NULL;
