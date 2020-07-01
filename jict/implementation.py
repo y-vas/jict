@@ -11,7 +11,7 @@ from SharedArray import create, attach, delete
 if 'pymongo' in sys.modules:
     from pymongo.cursor import Cursor
 
-if 'mysql' in sys.modules:
+if 'mysql-connector' in sys.modules:
     import mysql.connector
 
 
@@ -254,8 +254,8 @@ class jict( defaultdict ):
         f.close()
 
     def sql_store(self,db):
-        if 'mysql' not in sys.modules:
-            raise 'strore sql rquieres \'mysql\' module'
+        if 'mysql-connector' not in sys.modules:
+            raise 'strore sql rquieres \'mysql-connector\' module'
 
         found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
         print(found)
