@@ -105,14 +105,13 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 
 	/* Parse the arguments */
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
-					 &name,
-					 PyArray_IntpConverter, &shape ))
+					 &name, PyArray_IntpConverter, &shape ))
 		goto out;
 
 
 
 	printf("%s", name); // %s is format specifier
-	// printf("%s", shape.ptr ); // %s is format specifier
+	printf("%s", shape.len ); // %s is format specifier
 
 
 	/* Now do the real thing */
