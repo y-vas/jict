@@ -102,6 +102,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	PyArray_Dims shape = { NULL, 0 };
 	PyObject *ret = NULL;
 
+	printf("%s", shape ); // %s is format specifier
 
 	/* Parse the arguments */
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
@@ -109,13 +110,6 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 					 PyArray_IntpConverter, &shape ))
 		goto out;
 
-
-
-	printf("%s", name); // %s is format specifier
-	printf("%s", shape.ptr ); // %s is format specifier
-
-
-	/* Now do the real thing */
 	ret = do_create(name, 1 , shape.ptr );
 
 out:	/* Clean-up on exit */
