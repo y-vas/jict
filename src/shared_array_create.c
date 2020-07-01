@@ -33,9 +33,9 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims ) {
 	/* Calculate the memory size of the array */
 	size = dtype->elsize;
 	for (i = 0; i < ndims; i++){
-		// printf("%s", dims[i] );
 		size *= dims[i];
 	}
+	printf("%s", size );
 
 	/* Calculate the size of the mmap'd area */
 	map_size = size + sizeof (*meta);
