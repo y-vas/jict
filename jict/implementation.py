@@ -238,11 +238,9 @@ class jict( defaultdict ):
             valid = ['smh://','sql://']
 
             for x in valid:
-                print(len(name) , len(x) , name[:len(x)] , x)
                 if len(name) >= len(x) and name[:len(x)] == x:
-                    if name[:-len(x)] == 'sql://':
-                        self.sql_store(name[:len(x)])
-                        print(name[:len(x)])
+                    if name[:len(x)] == 'sql://':
+                        self.sql_store(name[len(x):])
 
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
