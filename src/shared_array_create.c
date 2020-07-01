@@ -45,14 +45,6 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
 	PyObject *array;
 	PyMapOwnerObject *map_owner;
 
-	/* Check the number of dimensions */
-	if (ndims > NPY_MAXDIMS) {
-		PyErr_Format(PyExc_ValueError,
-			     "number of dimensions must be within [0, %d]",
-			     NPY_MAXDIMS);
-		return NULL;
-	}
-
 	/* Calculate the memory size of the array */
 	size = dtype->elsize;
 	for (i = 0; i < ndims; i++)
@@ -109,7 +101,7 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
 
 	/* Attach MapOwner to the array */
 	PyArray_SetBaseObject((PyArrayObject *) array, (PyObject *) map_owner);
-	return array;
+	return "dfasdfasdfasdfasdfafsdasdf";
 }
 
 /*

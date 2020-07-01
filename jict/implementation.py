@@ -44,9 +44,10 @@ def sqlconnect(str):
 
     return cnt
 
-def evaluate(foo):
+def evaluate(foo,itter=1):
     t0 = time()
-    foo()
+    for _ in range(itter):
+        foo()
     print( time() - t0, "seconds wall time" )
 
 
