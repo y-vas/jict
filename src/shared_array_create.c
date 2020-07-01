@@ -100,8 +100,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	PyArray_Descr *dtype = NULL;
 	PyObject *ret = NULL;
 
-	char z[100] = "I am learning C programming language.";
-  printf("%s", z); // %s is format specifier
+  printf("%s", shape); // %s is format specifier
 
 	/* Parse the arguments */
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
