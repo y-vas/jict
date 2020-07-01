@@ -39,10 +39,11 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims ) {
 
 	/* Create the file */
 	if ((fd = open_file( name, O_RDWR | O_CREAT | O_EXCL, 0666)) < 0){
-		unlink_file(name);
-
-		if ((fd = open_file( name, O_RDWR | O_CREAT | O_EXCL, 0666)) < 0)
-			return PyErr_SetFromErrnoWithFilename(PyExc_OSError, name);
+		return PyErr_SetFromErrnoWithFilename(PyExc_OSError, name);
+		// unlink_file(name);
+		//
+		// if ((fd = open_file( name, O_RDWR | O_CREAT | O_EXCL, 0666)) < 0)
+		// 	return PyErr_SetFromErrnoWithFilename(PyExc_OSError, name);
 	}
 
 	/* Grow the file */
@@ -106,7 +107,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 					 &name, PyArray_IntpConverter, &shape ))
 		goto out;
 
-	ret = do_create(name, 1 , shape.ptr );
+	ret = do_create( name , 1 , shape.ptr );
 
 out:	/* Clean-up on exit */
 	if (shape.ptr)

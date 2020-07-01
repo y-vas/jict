@@ -106,8 +106,7 @@ static PyObject *do_attach(const char *name)
 /*
  * Method: SharedArray.attach()
  */
-PyObject *shared_array_attach(PyObject *self, PyObject *args)
-{
+PyObject *shared_array_attach(PyObject *self, PyObject *args ){
 	const char *name;
 
 	/* Parse the arguments */
