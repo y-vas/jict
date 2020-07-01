@@ -197,7 +197,7 @@ class jict( defaultdict ):
         ret = self._ittrdict(self,key)
 
         if len(ret) == 1:
-            return ret[1]
+            return ret[-1]
         elif len(ret) > 1:
             return ret
 
