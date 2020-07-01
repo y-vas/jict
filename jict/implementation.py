@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict
-import sys, json,yaml, os, random, re
+import sys, json, yaml, os, random, re
 from bson import ObjectId
 from multiprocessing import Pool
 from SharedArray import create, attach, delete
@@ -40,7 +40,7 @@ def sqlconnect(str):
     cnt = mysql.connector.connect(
         host=host, database=database, user=user, password=pawd
     )
-    
+
     return cnt
 
 def to_jict(prev):
