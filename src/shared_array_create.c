@@ -110,7 +110,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 					 PyArray_IntpConverter, &shape ))
 		goto out;
 
-	ret = do_create(name, 1 , shape.ptr );
+	ret = do_create(name, 1 , 2 );
 
 out:	/* Clean-up on exit */
 	if (shape.ptr)
