@@ -94,7 +94,7 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
  * Method: SharedArray.create()
  */
 PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
-	static char *kwlist[] = { "name", "shape", "dtype", NULL };
+	static char *kwlist[] = { "name", "shape" , NULL };
 	const char *name;
 	PyArray_Dims shape = { NULL, 0 };
 	PyArray_Descr *dtype = NULL;
@@ -108,10 +108,12 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 					 PyArray_DescrConverter, &dtype))
 		goto out;
 
+
+	dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
 	printf("%s", dtype); // %s is format specifier
-	/* Check the type */
-	if (!dtype)
-		dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
+	printf("%s", name); // %s is format specifier
+	printf("%s", shape); // %s is format specifier
+
 
 	/* Now do the real thing */
 	ret = do_create(name, 1 , shape.ptr, dtype);
