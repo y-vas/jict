@@ -43,6 +43,12 @@ def sqlconnect(str):
 
     return cnt
 
+def evaluate(foo):
+    t0 = time.time()
+    procedure()
+    print( time.time() - t0, "seconds wall time" )
+
+
 def to_jict(prev):
     nd = jict()
     for k,i in prev.items():

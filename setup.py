@@ -45,7 +45,7 @@ setup(
     classifiers=[
         "Topic :: Utilities",
     ],
-    install_requires = ['numpy'],
+    install_requires = ['numpy','bson'],
     ext_modules = [
         Extension('SharedArray',
                   glob.glob(os.path.join('.', 'src', '*.c')),
