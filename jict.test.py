@@ -1,7 +1,6 @@
 from jict import jict
 from time import sleep, time
-
-
+from SharedArray import *
 
 # jct = jict('jict.json')
 try:
