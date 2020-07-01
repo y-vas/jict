@@ -100,7 +100,6 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	PyArray_Descr *dtype = NULL;
 	PyObject *ret = NULL;
 
-  printf("%s", shape); // %s is format specifier
 
 	/* Parse the arguments */
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
@@ -109,6 +108,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 					 PyArray_DescrConverter, &dtype))
 		goto out;
 
+	printf("%s", dtype); // %s is format specifier
 	/* Check the type */
 	if (!dtype)
 		dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
