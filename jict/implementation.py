@@ -40,6 +40,8 @@ def sqlconnect(str):
     cnt = mysql.connector.connect(
         host=host, database=database, user=user, password=pawd
     )
+    
+    return cnt
 
 def to_jict(prev):
     nd = jict()
