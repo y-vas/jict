@@ -1,6 +1,8 @@
 from jict import jict
 from time import sleep, time
 from SharedArray import *
+import mmap
+
 
 a = attach("shm://test")
 print(a)

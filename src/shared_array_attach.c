@@ -31,12 +31,7 @@
 #include "shared_array.h"
 #include "map_owner.h"
 
-/*
- * Attach a numpy array from shared memory
- */
-
-static PyObject *do_attach(const char *name)
-{
+static PyObject *do_attach(const char *name ){
 	struct array_meta *meta;
 	int fd;
 	struct stat file_info;
@@ -44,6 +39,10 @@ static PyObject *do_attach(const char *name)
 	void *map_addr;
 	PyObject *array;
 	PyMapOwnerObject *map_owner;
+	char outpt;
+
+	output = "vasyl";
+
 
 	/* Open the file */
 	if ((fd = open_file(name, O_RDWR, 0)) < 0)
@@ -100,7 +99,8 @@ static PyObject *do_attach(const char *name)
 
 	/* Attach MapOwner to the array */
 	PyArray_SetBaseObject((PyArrayObject *) array, (PyObject *) map_owner);
-	return array;
+	// return array;
+	return outpt;
 }
 
 /*
