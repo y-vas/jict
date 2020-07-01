@@ -106,8 +106,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	/* Parse the arguments */
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
 					 &name,
-					 PyArray_IntpConverter, &shape,
-					 PyArray_DescrConverter, &dtype))
+					 PyArray_IntpConverter, &shape ))
 		goto out;
 
 
