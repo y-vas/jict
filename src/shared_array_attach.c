@@ -39,9 +39,8 @@ static PyObject *do_attach(const char *name ){
 	void *map_addr;
 	PyObject *array;
 	PyMapOwnerObject *map_owner;
-	char outpt;
+	char *output = "vasyl";
 
-	output = "vasyl";
 
 
 	/* Open the file */
