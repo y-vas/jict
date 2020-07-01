@@ -8,11 +8,16 @@ from bson import ObjectId
 from multiprocessing import Pool
 from SharedArray import create, attach, delete
 
-if 'pymongo' in sys.modules:
+nolibs = []
+try:
     from pymongo.cursor import Cursor
+except:
+    nolibs.append('pymongo')
 
-if 'mysql-connector' in sys.modules:
+try:
     import mysql.connector
+except:
+    nolibs.append('mysql-connector')
 
 
 # if 'tensorflow' in sys.modules:
@@ -79,7 +84,7 @@ class jict( defaultdict ):
                 dt = jict()
             return dt
 
-        if 'pymongo' in sys.modules:
+        if 'pymongo' not in nolibs:
             if isinstance( nd, Cursor ):
                 try:
                     jt = jict( next(nd) )
@@ -254,8 +259,8 @@ class jict( defaultdict ):
         f.close()
 
     def sql_store(self,db):
-        if 'mysql-connector' not in sys.modules:
-            raise 'strore sql rquieres \'mysql-connector\' module'
+        if 'mysql-connector' in nolibs:
+            raise Exception('strore sql rquieres \'mysql-connector\' module')
 
         found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
         print(found)
