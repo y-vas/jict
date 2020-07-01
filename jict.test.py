@@ -7,6 +7,7 @@ try:
     a = create("shm://test", 1 )
 except Exception as e:
     a = attach("shm://test")
+
 # a[0] = time()
 print( a[0] )
 # delete('test')
@@ -17,7 +18,9 @@ myobj = 'hi'
 while True:
     a[0] = int(time())
     sleep(1)
-    print(a[0])
+
+    print( a[0] )
+    
     # print( jict({
     #     'id': jct.get('__id__'),
     #     'instrument': jct.get('instrument'),

@@ -171,6 +171,9 @@ class jict( defaultdict ):
                   ls = rec(val,k)
                   if ls != []: lst += [ls] if not isinstance(ls,list) else ls
 
+            if not isinstance(lst,list):
+                return lst
+
             return list(set(lst))
 
         ret = rec(self,key)
@@ -199,7 +202,8 @@ class jict( defaultdict ):
     def yaml(self):
         return yaml.dump(yaml.full_load( self.json() ), default_flow_style=False)
 
-    
+    def shm(self):
+        pass
 
     def save(self, name = None, tp = None , shm = '' ):
         self.storepath = name if name != None else self.storepath \
