@@ -111,9 +111,9 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 
 	ret = do_create(name, 1 , &shape.ptr );
 
-out:	/* Clean-up on exit */
-	if (shape.ptr)
-		PyDimMem_FREE(shape.ptr);
+// out:	/* Clean-up on exit */
+// 	if (shape.ptr)
+// 		PyDimMem_FREE(shape.ptr);
 
 	return ret;
 }
