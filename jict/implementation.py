@@ -153,7 +153,7 @@ class jict( defaultdict ):
         self[key] = val if val < self[key] else self[key]
         return self[key]
 
-    def rreplace(self, targets):
+    def rreplace(self, targets ):
         for k in targets.keys():
             self._change(k,targets[k])
 
@@ -172,6 +172,37 @@ class jict( defaultdict ):
                 val.drop( target )
             if val == target:
                 del self[x]
+
+    def rename(self,target,replace):
+        def ittrlist(lst,tg,rp):
+            nl = []
+            for x in lst:
+                if isinstance(x,jict):
+                    x.rename(tg,rp)
+                if isinstance(x,dict):
+                    jct = jict(x)
+                    jct.rename(tg,rp)
+                    x = jct.dict()
+                if isinstance(x,list):
+                    x = ittrlist(x,tg,rp)
+
+                nl.append(x)
+            return nl
+
+        for k in self.keys():
+            val = self[k]
+            if isinstance(val,list):
+                self[replace] = ittrlist(val,target,replace)
+                del self[target]
+            if isinstance(val,jict):
+                val.rename(target,replace)
+            if isinstance(val,dict):
+                jct = jict(val)
+                jct.rename(target,replace)
+                self[replace] = jct.dict()
+                del self[target]
+            if k == target:
+                self[replace] = self.pop(target)
 
     def _ittrlist(self,lst,k,luky=True ):
         found = []
@@ -246,6 +277,7 @@ class jict( defaultdict ):
                 if len(name) >= len(x) and name[:len(x)] == x:
                     if name[:len(x)] == 'sql://':
                         self.sql_store(name[len(x):])
+                        return
 
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
@@ -263,14 +295,10 @@ class jict( defaultdict ):
             raise Exception('strore sql rquieres \'mysql-connector\' module')
 
         found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
-        print(found)
         user,pawd,host,database = found[0]
 
         connection = mysql.connector.connect(
-            host=host,
-            database=database,
-            user=user,
-            password=pawd
+            host=host, database=database, user=user, password=pawd
         )
 
         cursor = connection.cursor()
@@ -279,7 +307,7 @@ class jict( defaultdict ):
             lines = self[table]
 
             for line in lines:
-                print(line)
+                print( line )
 
 
         cursor.close()
