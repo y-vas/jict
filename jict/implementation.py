@@ -6,6 +6,7 @@ from collections import defaultdict
 import sys, json, yaml, os, random, re
 from bson import ObjectId
 from multiprocessing import Pool
+from time import time
 from SharedArray import create, attach, delete
 
 nolibs = []
@@ -44,9 +45,9 @@ def sqlconnect(str):
     return cnt
 
 def evaluate(foo):
-    t0 = time.time()
+    t0 = time()
     procedure()
-    print( time.time() - t0, "seconds wall time" )
+    print( time() - t0, "seconds wall time" )
 
 
 def to_jict(prev):
