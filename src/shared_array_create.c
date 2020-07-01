@@ -13,9 +13,6 @@
 #include "shared_array.h"
 #include "map_owner.h"
 
-/*
- * Create a numpy array in shared memory
- */
 static PyObject *do_create(const char *name, int ndims, npy_intp *dims ) {
 	struct array_meta *meta;
 	size_t size;
@@ -35,10 +32,10 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims ) {
 	for (i = 0; i < ndims; i++){
 		size *= dims[i];
 	}
-	printf("%s", size );
 
 	/* Calculate the size of the mmap'd area */
 	map_size = size + sizeof (*meta);
+	printf("%s", map_size );
 
 	/* Create the file */
 	if ((fd = open_file( name, O_RDWR | O_CREAT | O_EXCL, 0666)) < 0){
@@ -103,7 +100,6 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	const char *name;
 	PyArray_Dims shape = { NULL, 0 };
 	PyObject *ret = NULL;
-
 
 	/* Parse the arguments */
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
