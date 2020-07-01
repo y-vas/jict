@@ -105,11 +105,11 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	printf("%s", &name ); // %s is format specifier
 
 	/* Parse the arguments */
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
-					 &name, PyArray_IntpConverter, &shape ))
-		goto out;
+	// if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
+	// 				 &name, PyArray_IntpConverter, &shape ))
+	// 	goto out;
 
-	ret = do_create(name, 1 , shape.ptr );
+	ret = do_create(name, 1 , &shape.ptr );
 
 out:	/* Clean-up on exit */
 	if (shape.ptr)
