@@ -112,7 +112,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 		dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
 
 	/* Now do the real thing */
-	ret = do_create(name, 50 , shape.ptr, dtype);
+	ret = do_create(name, 1 , shape.ptr, dtype);
 
 out:	/* Clean-up on exit */
 	if (shape.ptr)
