@@ -259,6 +259,7 @@ class jict( defaultdict ):
             raise 'strore sql rquieres \'mysql\' module'
 
         found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
+        print(found)
         user,pass,host,database = found[0]
 
         connection = mysql.connector.connect(
@@ -279,6 +280,6 @@ class jict( defaultdict ):
 
         cursor.close()
         connection.close()
-        
+
         del cursor
         del connection
