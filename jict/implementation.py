@@ -30,8 +30,9 @@ def to_jict(prev):
             for l in i:
                 if isinstance(l,dict):
                     nl.append(to_jict(l))
-                else
+                else:
                     nl.append(l)
+            nd[k] = nl
         else:
             nd[k] = i
     return nd
