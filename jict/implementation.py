@@ -238,6 +238,7 @@ class jict( defaultdict ):
             valid = ['smh://','sql://']
 
             for x in valid:
+                print(len(name) , len(x) , name[:-len(x)] , x)
                 if len(name) >= len(x) and name[:-len(x)] == x:
                     if name[:-len(x)] == 'sql://':
                         self.sql_store(name[len(x):])
