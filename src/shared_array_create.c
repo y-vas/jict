@@ -112,7 +112,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
 	printf("%s", dtype); // %s is format specifier
 	printf("%s", name); // %s is format specifier
-	printf("%s", shape); // %s is format specifier
+	printf("%s", shape.ptr ); // %s is format specifier
 
 
 	/* Now do the real thing */
