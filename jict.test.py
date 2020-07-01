@@ -2,7 +2,7 @@ from jict import jict
 from time import sleep, time
 from SharedArray import *
 
-a = create("shm://test", 1 )
+a = create("shm://test", 2 )
 print(a)
 
 # a[0] = time()
