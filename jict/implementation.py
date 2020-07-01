@@ -192,15 +192,13 @@ class jict( defaultdict ):
         for k in self.keys():
             val = self[k]
             if isinstance(val,list):
-                self[replace] = ittrlist(val,target,replace)
-                del self[target]
+                self[k] = ittrlist(val,target,replace)
             if isinstance(val,jict):
                 val.rename(target,replace)
             if isinstance(val,dict):
                 jct = jict(val)
                 jct.rename(target,replace)
-                self[replace] = jct.dict()
-                del self[target]
+                self[k] = jct.dict()
             if k == target:
                 self[replace] = self.pop(target)
 
