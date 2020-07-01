@@ -275,3 +275,7 @@ class jict( defaultdict ):
 
             for line in lines:
                 print(line)
+
+
+        del cursor
+        del connection
