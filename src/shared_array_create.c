@@ -38,7 +38,7 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
 	/* Create the file */
 	if ((fd = open_file( name, O_RDWR | O_CREAT | O_EXCL, 0666)) < 0){
 		unlink_file(name);
-		
+
 		if ((fd = open_file( name, O_RDWR | O_CREAT | O_EXCL, 0666)) < 0)
 			return PyErr_SetFromErrnoWithFilename(PyExc_OSError, name);
 	}
@@ -87,7 +87,7 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
 
 	/* Attach MapOwner to the array */
 	PyArray_SetBaseObject((PyArrayObject *) array, (PyObject *) map_owner);
-	return "dfasdfasdfasdfasdfafsdasdf";
+	return array;
 }
 
 /*
@@ -112,7 +112,7 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 		dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
 
 	/* Now do the real thing */
-	ret = do_create(name, 50 , shape.ptr, dtype);
+	ret = do_create(name, 1 , shape.ptr, dtype);
 
 out:	/* Clean-up on exit */
 	if (shape.ptr)
