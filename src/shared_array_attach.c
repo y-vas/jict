@@ -39,8 +39,6 @@ static PyObject *do_attach(const char *name ){
 	void *map_addr;
 	PyObject *array;
 	PyMapOwnerObject *map_owner;
-	char *output = "vasyl";
-
 
 
 	/* Open the file */
@@ -98,8 +96,7 @@ static PyObject *do_attach(const char *name ){
 
 	/* Attach MapOwner to the array */
 	PyArray_SetBaseObject((PyArrayObject *) array, (PyObject *) map_owner);
-	// return array;
-	return outpt;
+	return array;
 }
 
 /*
@@ -113,5 +110,6 @@ PyObject *shared_array_attach(PyObject *self, PyObject *args ){
 		return NULL;
 
 	/* Now do the real thing */
-	return do_attach(name);
+	// return do_attach(name);
+	return name;
 }
