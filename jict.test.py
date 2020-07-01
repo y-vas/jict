@@ -20,7 +20,7 @@ while True:
     sleep(1)
 
     print( a[0] )
-    
+
     # print( jict({
     #     'id': jct.get('__id__'),
     #     'instrument': jct.get('instrument'),
