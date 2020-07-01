@@ -16,7 +16,7 @@
 /*
  * Create a numpy array in shared memory
  */
-static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_Descr *dtype) {
+static PyObject *do_create(const char *name, int ndims, npy_intp *dims ) {
 	struct array_meta *meta;
 	size_t size;
 	size_t map_size;
@@ -26,6 +26,9 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims, PyArray_
 	struct stat file_info;
 	PyObject *array;
 	PyMapOwnerObject *map_owner;
+	PyArray_Descr *dtype = NULL;
+
+	dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
 
 	/* Calculate the memory size of the array */
 	size = dtype->elsize;
@@ -97,7 +100,6 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	static char *kwlist[] = { "name", "shape" , NULL };
 	const char *name;
 	PyArray_Dims shape = { NULL, 0 };
-	PyArray_Descr *dtype = NULL;
 	PyObject *ret = NULL;
 
 
@@ -109,14 +111,14 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 		goto out;
 
 
-	dtype = PyArray_DescrFromType(NPY_DEFAULT_TYPE);
+
 	printf("%s", dtype); // %s is format specifier
 	printf("%s", name); // %s is format specifier
 	printf("%s", shape.ptr ); // %s is format specifier
 
 
 	/* Now do the real thing */
-	ret = do_create(name, 1 , shape.ptr, dtype);
+	ret = do_create(name, 1 , shape.ptr );
 
 out:	/* Clean-up on exit */
 	if (shape.ptr)
