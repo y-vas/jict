@@ -112,7 +112,6 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 
 
 
-	printf("%s", dtype); // %s is format specifier
 	printf("%s", name); // %s is format specifier
 	printf("%s", shape.ptr ); // %s is format specifier
 
