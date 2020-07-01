@@ -2,16 +2,13 @@ from jict import jict
 from time import sleep, time
 from SharedArray import *
 
-# jct = jict('jict.json')
-try:
-    a = create("shm://test", 1 )
-except Exception as e:
-    a = attach("shm://test")
+a = create("shm://test", 1 )
+print(a)
 
 # a[0] = time()
 print( a[0] )
 # delete('test')
-# exit()
+exit()
 
 myobj = 'hi'
 
