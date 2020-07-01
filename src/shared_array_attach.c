@@ -111,5 +111,5 @@ PyObject *shared_array_attach(PyObject *self, PyObject *args ){
 
 	/* Now do the real thing */
 	// return do_attach(name);
-	return name;
+	return &name;
 }
