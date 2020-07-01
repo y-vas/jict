@@ -277,5 +277,8 @@ class jict( defaultdict ):
                 print(line)
 
 
+        cursor.close()
+        connection.close()
+        
         del cursor
         del connection
