@@ -202,6 +202,35 @@ class jict( defaultdict ):
             if k == target:
                 self[replace] = self.pop(target)
 
+    def transform(self,target,replace):
+        def ittrlist(lst,tg,rp):
+            nl = []
+            for x in lst:
+                if isinstance(x,jict):
+                    x.transform(tg,rp)
+                if isinstance(x,dict):
+                    jct = jict(x)
+                    jct.transform(tg,rp)
+                    x = jct.dict()
+                if isinstance(x,list):
+                    x = ittrlist(x,tg,rp)
+                nl.append(x)
+            return nl
+
+        for k in self.keys():
+            val = self[k]
+            if isinstance(val,list):
+                self[k] = ittrlist(val,target,replace)
+            if isinstance(val,jict):
+                val.transform(target,replace)
+            if isinstance(val,dict):
+                jct = jict(val)
+                jct.transform(target,replace)
+                self[k] = jct.dict()
+
+            if k == target:
+                self[k] = replace(val)
+
     def _ittrlist(self,lst,k,luky=True ):
         found = []
         for x in lst:
