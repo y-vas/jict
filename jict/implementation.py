@@ -164,30 +164,44 @@ class jict( defaultdict ):
             if val == target:
                 del self[x]
 
+    def _ittrlist(self,lst,k):
+        found = []
+        for x in lst:
+            if isinstance(x,list):
+                found += self._ittrlist(x,k)
+                continue
+            elif isinstance(x,dict) or isinstance(x,jict):
+                found += self._ittrdict(x,k)
+        return found
+
+    def _ittrdict(self,dic,k):
+        found = []
+        for x in dic.keys():
+            val = dic[x]
+
+            if x == k:
+                found.append(val)
+                continue
+
+            if isinstance(val, list):
+                found += self._ittrlist(val,k)
+                continue
+
+            elif isinstance(val,dict) or isinstance(val,jict):
+                found += self._ittrdict(val,k)
+
+        return found
+
     def get(self,key):
-        def rec(dic,k):
-            lst = []
-            for x in dic.keys():
-                val = dic[x]
-                if x == k: return val
-                if isinstance(val, list):
-                    for i in val:
-                        if isinstance(i,dict):
-                            ls = rec(i,k)
-                            if ls != []: lst += [ls] if not isinstance(ls,list) else ls
-                elif isinstance(val,dict) or isinstance(val,jict):
-                  ls = rec(val,k)
-                  if ls != []: lst += [ls] if not isinstance(ls,list) else ls
 
-            if not isinstance(lst,list):
-                return lst
+        ret = self._ittrdict(self,key)
 
-            return list(set(lst))
-
-        ret = rec(self,key)
-        if not isinstance(ret,list):
+        if len(ret) == 1:
+            return ret[1]
+        elif len(ret) > 1:
             return ret
-        return ret if len(ret) > 1 else ret[-1] if len(ret) == 1 else None
+
+        return None
 
     def dict(self, input_dict=None ):
         plain_dict = dict()
