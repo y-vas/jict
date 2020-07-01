@@ -3,13 +3,17 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict
-import sys, json,yaml, os, random
+import sys, json,yaml, os, random, re
 from bson import ObjectId
 from multiprocessing import Pool
 from SharedArray import create, attach, delete
 
 if 'pymongo' in sys.modules:
     from pymongo.cursor import Cursor
+
+if 'mysql' in sys.modules:
+    import mysql.connector
+
 
 # if 'tensorflow' in sys.modules:
 #     import tensorflow
@@ -164,7 +168,7 @@ class jict( defaultdict ):
             if val == target:
                 del self[x]
 
-    def _ittrlist(self,lst,k,luky=False ):
+    def _ittrlist(self,lst,k,luky=True ):
         found = []
         for x in lst:
             if isinstance(x,list):
@@ -174,7 +178,7 @@ class jict( defaultdict ):
                 found += self._ittrdict(x,k,luky)
         return found
 
-    def _ittrdict(self,dic,k ,luky = False ):
+    def _ittrdict(self,dic,k ,luky = True ):
         found = []
         for x in dic.keys():
             val = dic[x]
@@ -193,7 +197,7 @@ class jict( defaultdict ):
 
         return found
 
-    def get(self,key,luky = False ):
+    def get(self,key,luky = True ):
 
         ret = self._ittrdict(self,key, luky )
 
@@ -229,6 +233,16 @@ class jict( defaultdict ):
         pass
 
     def save(self, name = None, tp = None , shm = '' ):
+
+        if name != None:
+            valid = ['smh://','sql://']
+
+            for x in valid:
+                if len(name) >= len(x) and name[:-len(x)] == x:
+                    if name[:-len(x)] == 'sql://':
+                        self.sql_store(name[len(x):])
+
+
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
 
@@ -239,3 +253,25 @@ class jict( defaultdict ):
         f = open(self.storepath, "w+")
         f.write( self.yaml() if tp == '.yaml' else self.json() )
         f.close()
+
+    def sql_store(self,db):
+        if 'mysql' not in sys.modules:
+            raise 'strore sql rquieres \'mysql\' module'
+
+        found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
+        user,pass,host,database = found[0]
+
+        connection = mysql.connector.connect(
+            host=host,
+            database=database,
+            user=user,
+            password=pass
+        )
+
+        cursor = connection.cursor()
+
+        for table in self.keys():
+            lines = self[table]
+
+            for line in lines:
+                print(line)
