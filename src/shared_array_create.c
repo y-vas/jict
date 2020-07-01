@@ -33,6 +33,7 @@ static PyObject *do_create(const char *name, int ndims, npy_intp *dims ) {
 	/* Calculate the memory size of the array */
 	size = dtype->elsize;
 	for (i = 0; i < ndims; i++)
+		printf("%s", dims[i] ); // %s is format specifier
 		size *= dims[i];
 
 	/* Calculate the size of the mmap'd area */
@@ -102,18 +103,17 @@ PyObject *shared_array_create( PyObject *self, PyObject *args, PyObject *kwds ){
 	PyArray_Dims shape = { NULL, 0 };
 	PyObject *ret = NULL;
 
-	printf("%s", &name ); // %s is format specifier
 
 	/* Parse the arguments */
-	// if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
-	// 				 &name, PyArray_IntpConverter, &shape ))
-	// 	goto out;
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "sO&|O&", kwlist,
+					 &name, PyArray_IntpConverter, &shape ))
+		goto out;
 
-	ret = do_create(name, 1 , &shape.ptr );
+	ret = do_create(name, 1 , shape.ptr );
 
-// out:	/* Clean-up on exit */
-// 	if (shape.ptr)
-// 		PyDimMem_FREE(shape.ptr);
+out:	/* Clean-up on exit */
+	if (shape.ptr)
+		PyDimMem_FREE(shape.ptr);
 
 	return ret;
 }
