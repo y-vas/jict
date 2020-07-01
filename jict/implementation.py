@@ -260,13 +260,13 @@ class jict( defaultdict ):
 
         found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
         print(found)
-        user,pass,host,database = found[0]
+        user,pawd,host,database = found[0]
 
         connection = mysql.connector.connect(
             host=host,
             database=database,
             user=user,
-            password=pass
+            password=pawd
         )
 
         cursor = connection.cursor()
