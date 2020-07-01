@@ -9,6 +9,7 @@ from multiprocessing import Pool
 from SharedArray import create, attach, delete
 
 nolibs = []
+
 try:
     from pymongo.cursor import Cursor
 except:
@@ -19,7 +20,6 @@ try:
 except:
     nolibs.append('mysql-connector')
 
-
 # if 'tensorflow' in sys.modules:
 #     import tensorflow
 
@@ -28,6 +28,18 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(o, ObjectId):
             return str(o)
         return json.JSONEncoder.default(self, o)
+
+def sqlconnect(str):
+    if 'mysql-connector' in nolibs:
+        raise Exception('strore sql rquieres \'mysql-connector\' module')
+
+    user,pawd,host,database = re.findall(
+        "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)"
+    , str )[0]
+
+    cnt = mysql.connector.connect(
+        host=host, database=database, user=user, password=pawd
+    )
 
 def to_jict(prev):
     nd = jict()
@@ -318,20 +330,15 @@ class jict( defaultdict ):
         f.close()
 
     def sql_store(self,db):
-        if 'mysql-connector' in nolibs:
-            raise Exception('strore sql rquieres \'mysql-connector\' module')
+        connection = sqlconnect()
 
-        found = re.findall( "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)" , db )
-        user,pawd,host,database = found[0]
-
-        connection = mysql.connector.connect(
-            host=host, database=database, user=user, password=pawd
-        )
-
-        cursor = connection.cursor()
+        skip = ['columns']
 
         for table in self.keys():
             lines = self[table]
+
+            if table in skip:
+                continue
 
             for line in lines:
                 print( line )
