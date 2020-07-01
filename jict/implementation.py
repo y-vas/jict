@@ -25,14 +25,14 @@ def to_jict(prev):
     for k,i in prev.items():
         if isinstance(i,dict):
             nd[k] = to_jict(i)
-        elif isinstance(i,list):
-            nl = []
-            for l in i:
-                if isinstance(l,dict):
-                    nl.append(to_jict(l))
-                else:
-                    nl.append(l)
-            nd[k] = nl
+        # elif isinstance(i,list):
+        #     nl = []
+        #     for l in i:
+        #         if isinstance(l,dict):
+        #             nl.append(to_jict(l))
+        #         else:
+        #             nl.append(l)
+        #     nd[k] = nl
         else:
             nd[k] = i
     return nd
