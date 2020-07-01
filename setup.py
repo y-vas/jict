@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-import re, os
+import re, os,glob
 try:
-    from setuptools import setup
+    from setuptools import setup,Extension
 except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
-    from setuptools import setup
+    from setuptools import setup,Extension
 
 
 # Following the recommendations of PEP 396 we parse the version number
@@ -22,6 +22,14 @@ jict_readme = f.read()
 f.close()
 jict_version = parse_version(os.path.join("jict", "__init__.py"))
 
+
+# Fail gracefully if numpy isn't installed
+try:
+    import numpy
+    include_dirs = [numpy.get_include()]
+except:
+    include_dirs = []
+
 setup(
     name = "jict",
     version= jict_version,
@@ -31,11 +39,17 @@ setup(
     author='Vasyl Yovdiy',
     author_email='yovdiyvasyl@gmail.com',
     url="https://github.com/y-vas/jict",
-    install_requires=[],
     setup_requires=[],
     keywords = ["nested", "jict", "defaultdict", "dictionary", "auto-vivification"],
     license = "MIT",
     classifiers=[
         "Topic :: Utilities",
+    ],
+    install_requires = ['numpy'],
+    ext_modules = [
+        Extension('SharedArray',
+                  glob.glob(os.path.join('.', 'src', '*.c')),
+                  libraries = [ 'rt' ] if sys.platform.startswith('linux') else [],
+                  include_dirs = include_dirs)
     ],
 )

@@ -5,12 +5,14 @@ from __future__ import division
 from collections import defaultdict
 import sys, json,yaml, os, random
 from bson import ObjectId
+from multiprocessing import Pool
+from SharedArray import create, attach, delete
 
 if 'pymongo' in sys.modules:
     from pymongo.cursor import Cursor
 
-if 'tensorflow' in sys.modules:
-    import tensorflow
+# if 'tensorflow' in sys.modules:
+#     import tensorflow
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -109,7 +111,7 @@ class jict( defaultdict ):
 
         if typ == jict:
             for x in other.keys():
-                if not hasattr(self,x):
+                if x not in self.keys():
                     self[x] = other[x]
                 else:
                     self[x] += other[x]
@@ -154,6 +156,28 @@ class jict( defaultdict ):
             if val == target:
                 del self[x]
 
+    def get(self,key):
+        def rec(dic,k):
+            lst = []
+            for x in dic.keys():
+                val = dic[x]
+                if x == k: return val
+                if isinstance(val, list):
+                    for i in val:
+                        if isinstance(i,dict):
+                            ls = rec(i,k)
+                            if ls != []: lst += [ls] if not isinstance(ls,list) else ls
+                elif isinstance(val,dict) or isinstance(val,jict):
+                  ls = rec(val,k)
+                  if ls != []: lst += [ls] if not isinstance(ls,list) else ls
+
+            return list(set(lst))
+
+        ret = rec(self,key)
+        if not isinstance(ret,list):
+            return ret
+        return ret if len(ret) > 1 else ret[-1] if len(ret) == 1 else None
+
     def dict(self, input_dict=None ):
         plain_dict = dict()
         if input_dict is None:
@@ -175,7 +199,9 @@ class jict( defaultdict ):
     def yaml(self):
         return yaml.dump(yaml.full_load( self.json() ), default_flow_style=False)
 
-    def save(self, name = None, tp = None ):
+    
+
+    def save(self, name = None, tp = None , shm = '' ):
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
 

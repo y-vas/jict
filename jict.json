@@ -1,0 +1,79 @@
+{
+  "orderCreateTransaction": {
+    "type": "MARKET_ORDER",
+    "instrument": "EUR_USD",
+    "units": "-267771",
+    "timeInForce": "FOK",
+    "positionFill": "REDUCE_ONLY",
+    "reason": "TRADE_CLOSE",
+    "tradeClose": {
+      "units": "ALL",
+      "tradeID": "350"
+    },
+    "id": "351",
+    "accountID": "101-004-12605728-001",
+    "userID": 12605728,
+    "batchID": "351",
+    "requestID": "60726924189889359",
+    "time": "2020-06-30T13:51:30.645316025Z"
+  },
+  "orderFillTransaction": {
+    "type": "ORDER_FILL",
+    "orderID": "351",
+    "instrument": "EUR_USD",
+    "units": "-267771",
+    "requestedUnits": "-267771",
+    "price": "1.12149",
+    "pl": "-28.7932",
+    "financing": "0.0000",
+    "commission": "0.0000",
+    "accountBalance": "89724.4009",
+    "gainQuoteHomeConversionFactor": "0.887161131948",
+    "lossQuoteHomeConversionFactor": "0.896077324229",
+    "guaranteedExecutionFee": "0.0000",
+    "halfSpreadCost": "15.5187",
+    "fullVWAP": "1.12149",
+    "reason": "MARKET_ORDER_TRADE_CLOSE",
+    "tradesClosed": [
+      {
+        "tradeID": "350",
+        "units": "-267771",
+        "realizedPL": "-28.7932",
+        "financing": "0.0000",
+        "price": "1.12149",
+        "guaranteedExecutionFee": "0.0000",
+        "halfSpreadCost": "15.5187"
+      }
+    ],
+    "fullPrice": {
+      "closeoutBid": "1.12149",
+      "closeoutAsk": "1.12162",
+      "timestamp": "2020-06-30T13:51:29.198791837Z",
+      "bids": [
+        {
+          "price": "1.12149",
+          "liquidity": "10000000"
+        }
+      ],
+      "asks": [
+        {
+          "price": "1.12162",
+          "liquidity": "10000000"
+        }
+      ]
+    },
+    "id": "352",
+    "accountID": "101-004-12605728-001",
+    "userID": 12605728,
+    "batchID": "351",
+    "requestID": "60726924189889359",
+    "time": "2020-06-30T13:51:30.645316025Z"
+  },
+  "relatedTransactionIDs": [
+    "351",
+    "352"
+  ],
+  "lastTransactionID": "352",
+  "__pythonid__": 140510443561152,
+  "__id__": 139727286128832
+}
