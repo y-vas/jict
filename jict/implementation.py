@@ -46,7 +46,7 @@ def sqlconnect(str):
 
 def evaluate(foo):
     t0 = time()
-    procedure()
+    foo()
     print( time() - t0, "seconds wall time" )
 
 
