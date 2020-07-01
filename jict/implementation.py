@@ -164,37 +164,38 @@ class jict( defaultdict ):
             if val == target:
                 del self[x]
 
-    def _ittrlist(self,lst,k):
+    def _ittrlist(self,lst,k,luky=False ):
         found = []
         for x in lst:
             if isinstance(x,list):
-                found += self._ittrlist(x,k)
+                found += self._ittrlist(x,k,luky)
                 continue
             elif isinstance(x,dict) or isinstance(x,jict):
-                found += self._ittrdict(x,k)
+                found += self._ittrdict(x,k,luky)
         return found
 
-    def _ittrdict(self,dic,k):
+    def _ittrdict(self,dic,k ,luky = False ):
         found = []
         for x in dic.keys():
             val = dic[x]
 
             if x == k:
                 found.append(val)
+                if luky: return found
                 continue
 
             if isinstance(val, list):
-                found += self._ittrlist(val,k)
+                found += self._ittrlist(val,k,luky)
                 continue
 
             elif isinstance(val,dict) or isinstance(val,jict):
-                found += self._ittrdict(val,k)
+                found += self._ittrdict(val,k,luky)
 
         return found
 
-    def get(self,key):
+    def get(self,key,luky = False ):
 
-        ret = self._ittrdict(self,key)
+        ret = self._ittrdict(self,key, luky )
 
         if len(ret) == 1:
             return ret[-1]
