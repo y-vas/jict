@@ -4,11 +4,13 @@ from time import sleep, time
 
 
 myobj = jict( 'shm://stock' )
-jct = jict('jict.json')
-print(jct)
-myobj['{hi}'] = jct
+# jct = jict('jict.json')
+
+# print(jct)
+myobj['{hi}'] = []
 
 
+print( myobj['{hi}'] )
 print( myobj['{hi}'] )
 # evaluate(test,10000)
 

@@ -324,7 +324,6 @@ class jict( defaultdict ):
 
         jct = super( defaultdict, self ).__getitem__(key)
 
-
         if hasattr( self , 'autosave' ):
             if isinstance(jct,jict):
                 jct.autosave = self.autosave
@@ -335,7 +334,12 @@ class jict( defaultdict ):
 
     def __setitem__( self , key , data ):
         if hasattr( self , 'sharedmem' ):
+            if not hasattr(self,key):
+                self[key]
+                
             self.shmsv(key,data)
+            # print(data)
+            # exit()
 
         super(defaultdict, self).__setitem__( key , data )
 
@@ -376,7 +380,7 @@ class jict( defaultdict ):
                 jct.autosave = aus
                 return jct
             # print(lst)
-            return v
+            return json.loads(v)
         elif len(lst) > 1:
             self.sharedmem.execute(f"DELETE FROM tmp WHERE key = '{key}'")
             self.sharedmem.commit()
@@ -388,21 +392,23 @@ class jict( defaultdict ):
         return self.shmgt(key)
 
     def shmsv(self,key,data):
-        dtp = 'jict'
-        if isinstance(data,str): dtp = 'str'
-        if isinstance(data,jict): data = data.json(0)
+        dtp = type(data).__name__
+
+        if isinstance(data,jict):
+            dtp = 'jict'
+            data = data.json(0)
 
         stri = f"UPDATE tmp SET data = '%s', tp = '{dtp}' where key = '{key}'" % data
 
         self.sharedmem.execute(stri)
         self.sharedmem.commit()
 
-        lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
-        print(lst)
 
         print('\n'*2)
         print('saved data for ',key,' data ', data )
         print(stri)
+        lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
+        print(lst)
         print('\n'*2)
 
 
