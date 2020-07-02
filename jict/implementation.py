@@ -315,77 +315,39 @@ class jict( defaultdict ):
         return yaml.dump(yaml.full_load( self.json(0) ), default_flow_style=False)
 
     def __getitem__(self,key):
-        print('getting item from ',key,'\n')
-
         if hasattr( self , 'sharedmem' ):
-            print( key, 'has sharedmem and we try to access it \n')
             ret = self.shmgt( key )
             return ret
 
         jct = super( defaultdict, self ).__getitem__(key)
-
         if hasattr( self , 'autosave' ):
             if isinstance(jct,jict):
                 jct.autosave = self.autosave
-            print(key,' has aotosave')
-            print(key,'has in itself',jct,'  tp:',type(jct),'\n')
-
         return jct
 
     def __setitem__( self , key , data ):
         if hasattr( self , 'sharedmem' ):
             if not hasattr(self,key):
                 self[key]
-                
             self.shmsv(key,data)
-            # print(data)
-            # exit()
-
         super(defaultdict, self).__setitem__( key , data )
-
         if hasattr( self , 'autosave' ):
             self.autosave()
-            print('saving because ',key,' was set to ',data)
-
-        print('im in :',type(self), self, 'because data ', data,' was set in', key )
-
-        print('\nfather of : ', key ,'has autosave', 'autosave' in  dir(self) )
-
-        print( key , data )
-        print( key , 'autosave' in  dir(data) )
-        print( '-'*100 )
-        # if hasattr( self , 'autosave' ):
-        #     print(type(self))
-        #     data.autosave()
-
 
     def shmgt(self,key):
         lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
-        print('check if there are values for ', key ,':' )
-        print(lst)
         if len(lst) == 1:
             _ ,v,dtp = lst[0]
-
-            print('\t\tfound values for ', key, v ,'| is type of ' ,dtp )
-
             if dtp == 'jict':
                 jct = to_jict( json.loads(v) )
-                print(key,':',jct)
-                # exit()
-
-                def aus():
-                    self.shmsv( key, jct )
-
-                print('store function in autosave for ', key )
+                def aus(): self.shmsv( key, jct )
                 jct.autosave = aus
                 return jct
-            # print(lst)
             return json.loads(v)
         elif len(lst) > 1:
             self.sharedmem.execute(f"DELETE FROM tmp WHERE key = '{key}'")
             self.sharedmem.commit()
 
-        print('no values for', key, 'so create value' )
         self.sharedmem.execute("INSERT INTO tmp VALUES ('%s', '{}', 'jict' )" % key )
         self.sharedmem.commit()
 
@@ -393,24 +355,12 @@ class jict( defaultdict ):
 
     def shmsv(self,key,data):
         dtp = type(data).__name__
-
         if isinstance(data,jict):
             dtp = 'jict'
             data = data.json(0)
-
         stri = f"UPDATE tmp SET data = '%s', tp = '{dtp}' where key = '{key}'" % data
-
         self.sharedmem.execute(stri)
         self.sharedmem.commit()
-
-
-        print('\n'*2)
-        print('saved data for ',key,' data ', data )
-        print(stri)
-        lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
-        print(lst)
-        print('\n'*2)
-
 
     def save(self, name = None, tp = None , shm = '' ):
 

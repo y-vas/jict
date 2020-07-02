@@ -2,17 +2,12 @@ from jict import jict, evaluate
 from time import sleep, time
 
 
+def test():
+    myobj = jict( 'shm://stock' )
+    jct = jict('jict.json')
+    myobj['{hi}'] = jct
 
-myobj = jict( 'shm://stock' )
-# jct = jict('jict.json')
-
-# print(jct)
-myobj['{hi}'] = []
-
-
-print( myobj['{hi}'] )
-print( myobj['{hi}'] )
-# evaluate(test,10000)
+evaluate(test,10000)
 
 # myobj2 = jict('shm://stock')
 # print('second')
