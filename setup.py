@@ -22,14 +22,6 @@ jict_readme = f.read()
 f.close()
 jict_version = parse_version(os.path.join("jict", "__init__.py"))
 
-
-# Fail gracefully if numpy isn't installed
-try:
-    import numpy
-    include_dirs = [numpy.get_include()]
-except:
-    include_dirs = []
-
 setup(
     name = "jict",
     version= jict_version,
@@ -45,11 +37,5 @@ setup(
     classifiers=[
         "Topic :: Utilities",
     ],
-    install_requires = ['numpy','bson'],
-    ext_modules = [
-        Extension('SharedArray',
-                  glob.glob(os.path.join('.', 'src', '*.c')),
-                  libraries = [ 'rt' ] if sys.platform.startswith('linux') else [],
-                  include_dirs = include_dirs)
-    ],
+    install_requires = ['numpy','pymongo','pyyaml'],
 )

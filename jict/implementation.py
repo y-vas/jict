@@ -3,18 +3,13 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict
-import sys, json, yaml, os, random, re
-from bson import ObjectId
-from multiprocessing import Pool
+import sys, json, yaml, os, random, re, sqlite3 ,copy
+from bson.objectid import ObjectId
+from pymongo.cursor import Cursor
 from time import time
-from SharedArray import create, attach, delete
+
 
 nolibs = []
-
-try:
-    from pymongo.cursor import Cursor
-except:
-    nolibs.append('pymongo')
 
 try:
     import mysql.connector
@@ -79,7 +74,7 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
-                if nd[-5:] in [ '.yaml' , '.json' ]:
+                if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
                     if not os.path.exists( nd ):
                         open( nd , 'w+' ).close()
 
@@ -99,6 +94,11 @@ class jict( defaultdict ):
 
                     dt = to_jict( data )
                     dt.storepath = nd
+                elif len(nd) >=7:
+                    if nd[:6] == 'shm://':
+                        dt = jict()
+                        dt.sharedmem = sqlite3.connect( nd[6:] + "::memory:?cache=shared" , uri=True )
+                        dt.sharedmem.execute('CREATE TABLE IF NOT EXISTS tmp (key,data,tp)')
                 else:
                     dt = to_jict( json.loads( nd ) )
             except Exception as e:
@@ -106,14 +106,13 @@ class jict( defaultdict ):
                 dt = jict()
             return dt
 
-        if 'pymongo' not in nolibs:
-            if isinstance( nd, Cursor ):
-                try:
-                    jt = jict( next(nd) )
-                    jt.generator = nd
-                except:
-                    jt = jict()
-                return jt
+        if isinstance( nd, Cursor ):
+            try:
+                jt = jict( next(nd) )
+                jt.generator = nd
+            except:
+                jt = jict()
+            return jt
 
         return super(jict, self).__new__(self, nd )
 
@@ -309,13 +308,103 @@ class jict( defaultdict ):
         return self.json()
 
     def json(self,indent=2):
+        if indent == 0: return json.dumps( self.dict() , cls= JSONEncoder )
         return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
 
     def yaml(self):
-        return yaml.dump(yaml.full_load( self.json() ), default_flow_style=False)
+        return yaml.dump(yaml.full_load( self.json(0) ), default_flow_style=False)
 
-    def shm(self):
-        pass
+    def __getitem__(self,key):
+        print('getting item from ',key,'\n')
+
+        if hasattr( self , 'sharedmem' ):
+            print( key, 'has sharedmem and we try to access it \n')
+            ret = self.shmgt( key )
+            return ret
+
+        jct = super( defaultdict, self ).__getitem__(key)
+
+
+        if hasattr( self , 'autosave' ):
+            if isinstance(jct,jict):
+                jct.autosave = self.autosave
+            print(key,' has aotosave')
+            print(key,'has in itself',jct,'  tp:',type(jct),'\n')
+
+        return jct
+
+    def __setitem__( self , key , data ):
+        if hasattr( self , 'sharedmem' ):
+            self.shmsv(key,data)
+
+        super(defaultdict, self).__setitem__( key , data )
+
+        if hasattr( self , 'autosave' ):
+            self.autosave()
+            print('saving because ',key,' was set to ',data)
+
+        print('im in :',type(self), self, 'because data ', data,' was set in', key )
+
+        print('\nfather of : ', key ,'has autosave', 'autosave' in  dir(self) )
+
+        print( key , data )
+        print( key , 'autosave' in  dir(data) )
+        print( '-'*100 )
+        # if hasattr( self , 'autosave' ):
+        #     print(type(self))
+        #     data.autosave()
+
+
+    def shmgt(self,key):
+        lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
+        print('check if there are values for ', key ,':' )
+        print(lst)
+        if len(lst) == 1:
+            _ ,v,dtp = lst[0]
+
+            print('\t\tfound values for ', key, v ,'| is type of ' ,dtp )
+
+            if dtp == 'jict':
+                jct = to_jict( json.loads(v) )
+                print(key,':',jct)
+                # exit()
+
+                def aus():
+                    self.shmsv( key, jct )
+
+                print('store function in autosave for ', key )
+                jct.autosave = aus
+                return jct
+            # print(lst)
+            return v
+        elif len(lst) > 1:
+            self.sharedmem.execute(f"DELETE FROM tmp WHERE key = '{key}'")
+            self.sharedmem.commit()
+
+        print('no values for', key, 'so create value' )
+        self.sharedmem.execute("INSERT INTO tmp VALUES ('%s', '{}', 'jict' )" % key )
+        self.sharedmem.commit()
+
+        return self.shmgt(key)
+
+    def shmsv(self,key,data):
+        dtp = 'jict'
+        if isinstance(data,str): dtp = 'str'
+        if isinstance(data,jict): data = data.json(0)
+
+        stri = f"UPDATE tmp SET data = '%s', tp = '{dtp}' where key = '{key}'" % data
+
+        self.sharedmem.execute(stri)
+        self.sharedmem.commit()
+
+        lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
+        print(lst)
+
+        print('\n'*2)
+        print('saved data for ',key,' data ', data )
+        print(stri)
+        print('\n'*2)
+
 
     def save(self, name = None, tp = None , shm = '' ):
 
