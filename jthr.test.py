@@ -1,9 +1,8 @@
 from jict import jict
-import ctypes
 from time import sleep
 
-a = attach("shm://test")
+myobj = jict( 'shm://stock' )
 
 while True:
-    print(a[0])
+    print(myobj['time'])
     sleep(1)
