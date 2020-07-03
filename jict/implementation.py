@@ -244,7 +244,10 @@ class jict( defaultdict ):
                 self[k] = jct.dict()
 
             if k == target:
-                self[k] = replacef(val)
+                if hasattr(replacef, '__call__'):
+                    self[k] = replacef(val)
+                else:
+                    self[k] = replacef
 
     def _ittrlist(self,lst,k,luky=True ):
         found = []

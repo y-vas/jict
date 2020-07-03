@@ -50,6 +50,23 @@ jct.replace('password','mypass')
 print(jct.get('password'))
 # output : mypass
 
+
+def foo(val):
+    val[0][0]['name'] = 'jict'
+    return val
+
+# we also can replace with callbacks and multiple values
+jct.replace({
+    'password':'mypass',
+    'list': foo,
+})
+
+# callbacks also work with this: jct.replace('list' , foo)
+
+print(jct.get('list'))
+# output: [[{'password': 'mypass', 'name': 'jict'}]]
+
+
 ```
 
 also you can easly load a .json , .yaml file
@@ -91,5 +108,7 @@ jct['memoryfield'] = 'hi'
 
 jct2 = jict('shm://mymemory')
 print( jct2['memoryfield'] )
+# output : hi
+
 
 ```
