@@ -28,7 +28,7 @@ setup(
     version= jict_version,
     description = "Python dictionary with automatic and arbitrary levels of nestedness",
     long_description= jict_readme,
-    long_description_content_type = 'text/x-rst',
+    long_description_content_type = 'text/markdown',
     packages = [ "jict" ],
     author='Vasyl Yovdiy',
     author_email='yovdiyvasyl@gmail.com',
