@@ -1,6 +1,7 @@
-from jict import jict, evaluate
+from jict import jict
 from time import sleep, time
 
+# this creates a shared memory file 
 myobj = jict( 'shm://stock' )
 
 while True:
