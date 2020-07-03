@@ -174,18 +174,6 @@ class jict( defaultdict ):
         self[key] = val if val < self[key] else self[key]
         return self[key]
 
-    def rreplace(self, targets ):
-        for k in targets.keys():
-            self._change(k,targets[k])
-
-    def _change(self, target , value ):
-        for x in self.keys():
-            val = self[x]
-            if isinstance(val , jict):
-                val._change(target, value )
-            if x == target:
-                self[x] = value
-
     def drop(self ,target = None):
         for x in list(self.dict()):
             val = self[x]
@@ -223,15 +211,21 @@ class jict( defaultdict ):
             if k == target:
                 self[replace] = self.pop(target)
 
-    def transform(self,target,replace):
+    def replace(self,target,replacef=None):
+
+        if replacef == None and isinstance(target,dict):
+            for k in target.keys():
+                self.replace(k,target[k])
+            return
+
         def ittrlist(lst,tg,rp):
             nl = []
             for x in lst:
                 if isinstance(x,jict):
-                    x.transform(tg,rp)
+                    x.replace(tg,rp)
                 if isinstance(x,dict):
                     jct = jict(x)
-                    jct.transform(tg,rp)
+                    jct.replace(tg,rp)
                     x = jct.dict()
                 if isinstance(x,list):
                     x = ittrlist(x,tg,rp)
@@ -241,16 +235,16 @@ class jict( defaultdict ):
         for k in self.keys():
             val = self[k]
             if isinstance(val,list):
-                self[k] = ittrlist(val,target,replace)
+                self[k] = ittrlist(val,target,replacef)
             if isinstance(val,jict):
-                val.transform(target,replace)
+                val.replace(target,replacef)
             if isinstance(val,dict):
                 jct = jict(val)
-                jct.transform(target,replace)
+                jct.replace(target,replacef)
                 self[k] = jct.dict()
 
             if k == target:
-                self[k] = replace(val)
+                self[k] = replacef(val)
 
     def _ittrlist(self,lst,k,luky=True ):
         found = []
@@ -343,6 +337,10 @@ class jict( defaultdict ):
                 def aus(): self.shmsv( key, jct )
                 jct.autosave = aus
                 return jct
+
+            if dtp in ['str','int','float']:
+                return eval(dtp+'(v)')
+
             return json.loads(v)
         elif len(lst) > 1:
             self.sharedmem.execute(f"DELETE FROM tmp WHERE key = '{key}'")
