@@ -7,8 +7,6 @@ import sys, json, yaml, os, random, re ,copy
 from bson.objectid import ObjectId
 from pymongo.cursor import Cursor
 from time import time
-# from threading import Thread
-
 
 nolibs = []
 
@@ -24,6 +22,7 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
+
         if isinstance(o, deque):
             return list(o)
 
