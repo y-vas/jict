@@ -2,8 +2,8 @@
 from __future__ import print_function
 from __future__ import division
 
-from collections import defaultdict
-import sys, json, yaml, os, random, re, sqlite3 ,copy
+from collections import defaultdict , deque
+import sys, json, yaml, os, random, re ,copy
 from bson.objectid import ObjectId
 from pymongo.cursor import Cursor
 from time import time
@@ -24,7 +24,13 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
-        return json.JSONEncoder.default(self, o)
+        if isinstance(o, deque):
+            return list(o)
+
+        try:
+            return json.JSONEncoder.default(self, o)
+        except:
+            return str(o)
 
 def sqlconnect(str):
     if 'mysql-connector' in nolibs:
@@ -50,6 +56,22 @@ def evaluate(foo, itter=1 , threads = 1 ):
         foo()
     print( time() - t0, "seconds wall time" )
 
+def loader(nd):
+    nam, ext = os.path.splitext( nd )
+
+    file = open( nd, "r+" )
+    text = file.read()
+    file.close()
+
+    data = {}
+    if ext == '.yaml' and text.strip() != '':
+        data = yaml.safe_load( text )
+    elif ext == '.json':
+        data = json.loads(text )
+    elif text.strip() == '':
+        data = {}
+
+    return data
 
 def to_jict(prev):
     nd = jict()
@@ -80,30 +102,23 @@ class jict( defaultdict ):
         if isinstance( nd, str ):
             try:
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
+                    share, subsc = False ,False
+
+                    if nd[:6] == 'set://':
+                        share = True
+                        nd = nd[6:]
+
+                    elif nd[:6] == 'get://':
+                        subsc = True
+                        nd = nd[6:]
+
                     if not os.path.exists( nd ):
                         open( nd , 'w+' ).close()
 
-                    nam, ext = os.path.splitext( nd )
-
-                    file = open( nd, "r+" )
-                    text = file.read()
-                    file.close()
-
-                    data = {}
-                    if ext == '.yaml' and text.strip() != '':
-                        data = yaml.safe_load( text )
-                    elif ext == '.json':
-                        data = json.loads(text )
-                    elif text.strip() == '':
-                        data = {}
-
-                    dt = to_jict( data )
+                    dt = to_jict( loader(nd) )
+                    if share: dt.share = True
+                    if subsc: dt.subsc = True
                     dt.storepath = nd
-                elif len(nd) >=7:
-                    if nd[:6] == 'shm://':
-                        dt = jict()
-                        dt.sharedmem = sqlite3.connect( nd[6:] + "::memory:?cache=shared" , uri=True )
-                        dt.sharedmem.execute('CREATE TABLE IF NOT EXISTS tmp (key,data,tp)')
                 else:
                     dt = to_jict( json.loads( nd ) )
             except Exception as e:
@@ -228,7 +243,7 @@ class jict( defaultdict ):
             if k == target:
                 self[replace] = self.pop(target)
 
-    def replace(self,target,replacef=None):
+    def replace(self, target , replacef = None ):
 
         if replacef == None and isinstance(target,dict):
             for k in target.keys():
@@ -317,6 +332,12 @@ class jict( defaultdict ):
                 plain_dict[ key ] = value
         return plain_dict
 
+    def random(self):
+        for x in range( random.randint(0, 9) ):
+            self[x] = x
+            if random.randint(0, 1) == 0:
+                self[x] = [ f for f in range(random.randint(0, 10)) ]
+
     def __str__(self):
         return self.json()
 
@@ -328,70 +349,40 @@ class jict( defaultdict ):
         return yaml.dump(yaml.full_load( self.json(0) ), default_flow_style=False)
 
     def __getitem__(self,key):
-        if hasattr( self , 'sharedmem' ):
-            ret = self.shmgt( key )
-            return ret
-
         jct = super( defaultdict, self ).__getitem__(key)
-        if hasattr( self , 'autosave' ):
-            if isinstance(jct,jict):
-                jct.autosave = self.autosave
+
+        if hasattr( self , 'subsc' ):
+            jct = jict( self.storepath  )
+            return jct[key]
+
         return jct
 
     def __setitem__( self , key , data ):
-        if hasattr( self , 'sharedmem' ):
-            if not hasattr(self,key):
-                self[key]
-            self.shmsv(key,data)
         super(defaultdict, self).__setitem__( key , data )
-        if hasattr( self , 'autosave' ):
-            self.autosave()
 
-    def shmgt(self,key):
-        lst = list(self.sharedmem.execute(f'SELECT * FROM tmp where key == "{key}"'))
-        if len(lst) == 1:
-            _ ,v,dtp = lst[0]
-            if dtp == 'jict':
-                jct = to_jict( json.loads(v) )
-                def aus(): self.shmsv( key, jct )
-                jct.autosave = aus
-                return jct
+        if hasattr( self , 'share' ):
+            self.save()
 
-            if dtp in ['str','int','float']:
-                return eval(dtp+'(v)')
+    def deque(self,key,data,maxlen = 5 ):
+        if not isinstance(self[key],deque):
+            self[key] = deque(maxlen = maxlen)
 
-            if dtp in ['list']:
-                return eval('v')
-
-            return json.loads(v)
-        elif len(lst) > 1:
-            self.sharedmem.execute(f"DELETE FROM tmp WHERE key = '{key}'")
-            self.sharedmem.commit()
-
-        self.sharedmem.execute("INSERT INTO tmp VALUES ('%s', '{}', 'jict' )" % key )
-        self.sharedmem.commit()
-
-        return self.shmgt(key)
-
-    def shmsv(self,key,data):
-        dtp = type(data).__name__
-        if isinstance(data,jict):
-            dtp = 'jict'
-            data = data.json(0)
-        stri = f"UPDATE tmp SET data = ?, tp = ? where key = ? "
-        self.sharedmem.execute(stri,(str(data),dtp,key))
-        self.sharedmem.commit()
+        self[key].append(data)
+        if hasattr(self,'share'):
+            self.save()
 
     def save(self, name = None, tp = None , shm = '' ):
 
         if name != None:
-            valid = ['smh://','sql://']
+
+            valid = ['sql://']
 
             for x in valid:
                 if len(name) >= len(x) and name[:len(x)] == x:
                     if name[:len(x)] == 'sql://':
                         self.sql_store(name[len(x):])
                         return
+
 
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
@@ -417,7 +408,6 @@ class jict( defaultdict ):
 
             for line in lines:
                 print( line )
-
 
         cursor.close()
         connection.close()
