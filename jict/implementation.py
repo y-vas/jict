@@ -7,6 +7,7 @@ import sys, json, yaml, os, random, re, sqlite3 ,copy
 from bson.objectid import ObjectId
 from pymongo.cursor import Cursor
 from time import time
+# from threading import Thread
 
 
 nolibs = []
@@ -39,7 +40,11 @@ def sqlconnect(str):
 
     return cnt
 
-def evaluate(foo,itter=1):
+def evaluate(foo, itter=1 , threads = 1 ):
+    # if threads > 1:
+    #     for _ in range(threads):
+    #         t = Thread(target=tht)
+
     t0 = time()
     for _ in range(itter):
         foo()
@@ -175,10 +180,22 @@ class jict( defaultdict ):
         return self[key]
 
     def drop(self ,target = None):
-        for x in list(self.dict()):
+
+        def ittrlis(val,tar):
+            for l in val:
+                if isinstance(l,jict):
+                    l.drop(tar)
+                if isinstance(l,list):
+                    ittrlis(l,tar)
+
+        for x in self.keys():
             val = self[x]
             if isinstance(val , jict):
                 val.drop( target )
+
+            if isinstance(val , list ):
+                ittrlis(val, target)
+
             if val == target:
                 del self[x]
 
@@ -279,7 +296,6 @@ class jict( defaultdict ):
         return found
 
     def get(self,key,luky = True ):
-
         ret = self._ittrdict(self,key, luky )
 
         if len(ret) == 1:
@@ -344,6 +360,9 @@ class jict( defaultdict ):
             if dtp in ['str','int','float']:
                 return eval(dtp+'(v)')
 
+            if dtp in ['list']:
+                return eval('v')
+
             return json.loads(v)
         elif len(lst) > 1:
             self.sharedmem.execute(f"DELETE FROM tmp WHERE key = '{key}'")
@@ -359,8 +378,8 @@ class jict( defaultdict ):
         if isinstance(data,jict):
             dtp = 'jict'
             data = data.json(0)
-        stri = f"UPDATE tmp SET data = '%s', tp = '{dtp}' where key = '{key}'" % data
-        self.sharedmem.execute(stri)
+        stri = f"UPDATE tmp SET data = ?, tp = ? where key = ? "
+        self.sharedmem.execute(stri,(str(data),dtp,key))
         self.sharedmem.commit()
 
     def save(self, name = None, tp = None , shm = '' ):
