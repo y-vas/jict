@@ -94,21 +94,4 @@ jcty.save()
 
 # you can also save to another file
 jcty.save('newfile.json')
-
-
-```
-also you can create a shared memory dict ( as sqlite3 instance )  
-and acces it from another process
-```python
-from jict import jict
-
-jct = jict('shm://mymemory')
-jct['memoryfield'] = 'hi'
-
-
-jct2 = jict('shm://mymemory')
-print( jct2['memoryfield'] )
-# output : hi
-
-
 ```
