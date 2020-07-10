@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """`jict` provides dictionaries with multiple levels of nested-ness."""
 
-__version__ = '2.2.2'
+__version__ = '2.2.3'
 from .implementation import jict, sqlconnect, evaluate
 from collections import deque
 
