@@ -204,7 +204,7 @@ class jict( defaultdict ):
                 self[key] = val
                 return self[key]
 
-        if self[key] == None: self[key] = 0
+        if self[key] == None: self[key] = 10 ** 15
 
         self[key] = val if val < self[key] else self[key]
         return self[key]
