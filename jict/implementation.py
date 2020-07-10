@@ -77,6 +77,7 @@ def to_jict(prev):
     for k,i in prev.items():
         if isinstance(i,dict):
             nd[k] = to_jict(i)
+
         # elif isinstance(i,list):
         #     nl = []
         #     for l in i:
@@ -85,9 +86,17 @@ def to_jict(prev):
         #         else:
         #             nl.append(l)
         #     nd[k] = nl
+
         else:
             nd[k] = i
     return nd
+
+def subscribe(file):
+    jct = jict( file )
+    jct.subsc = True
+    jct.storepath = file
+    while True:
+        yield jct
 
 class jict( defaultdict ):
     generator = None
@@ -106,10 +115,11 @@ class jict( defaultdict ):
                     if nd[:6] == 'set://':
                         share = True
                         nd = nd[6:]
-
                     elif nd[:6] == 'get://':
                         subsc = True
                         nd = nd[6:]
+                    elif nd[:6] == 'sub://':
+                        return subscribe(nd[6:])
 
                     if not os.path.exists( nd ):
                         open( nd , 'w+' ).close()
