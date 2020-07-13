@@ -5,7 +5,7 @@ from __future__ import division
 from collections import defaultdict , deque
 import sys, json, yaml, os, random, re ,copy
 from bson.objectid import ObjectId
-from pymongo.cursor import Cursor
+# from pymongo.cursor import Cursor
 from time import time
 
 nolibs = []
@@ -135,13 +135,13 @@ class jict( defaultdict ):
                 dt = jict()
             return dt
 
-        if isinstance( nd, Cursor ):
-            try:
-                jt = jict( next(nd) )
-                jt.generator = nd
-            except:
-                jt = jict()
-            return jt
+        # if isinstance( nd, Cursor ):
+        #     try:
+        #         jt = jict( next(nd) )
+        #         jt.generator = nd
+        #     except:
+        #         jt = jict()
+        #     return jt
 
         return super(jict, self).__new__(self, nd )
 
