@@ -3,13 +3,17 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict , deque
-import sys, json, yaml, os, random, re ,copy
+import sys, json, yaml, os, random, re ,copy, importlib
 from bson.objectid import ObjectId
-# from pymongo.cursor import Cursor
+
 from time import time
 
 nolibs = []
 
+try:
+    from pymongo.cursor import Cursor
+except Exception as e:
+    nolibs.append('pymongo')
 try:
     import mysql.connector
 except:
@@ -135,13 +139,14 @@ class jict( defaultdict ):
                 dt = jict()
             return dt
 
-        # if isinstance( nd, Cursor ):
-        #     try:
-        #         jt = jict( next(nd) )
-        #         jt.generator = nd
-        #     except:
-        #         jt = jict()
-        #     return jt
+
+        if 'pymongo' not in nolibs and isinstance( nd, Cursor ):
+            try:
+                jt = jict( next(nd) )
+                jt.generator = nd
+            except:
+                jt = jict()
+            return jt
 
         return super(jict, self).__new__(self, nd )
 
