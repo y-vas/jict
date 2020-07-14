@@ -74,5 +74,4 @@ class jictmt:
             self.loop.set_alarm_in( 0.5 , alarma )
 
         self.loop.set_alarm_in( 0.5,alarma)
-
         self.loop.run()

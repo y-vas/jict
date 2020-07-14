@@ -1,7 +1,7 @@
 from jict import jict , deque, evaluate
 from time import sleep
 
-jct = jict('set://mymemory.yaml')
+jct = jict( 'set://mymemory.yaml' )
 
 x = 0
 while True:
