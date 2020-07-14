@@ -9,6 +9,7 @@ try:
     import urwid
     from .menu import jictmt
 except Exception as e:
+
     class jictmt:
         def __init__(self):
             super(jictmt, self).__init__()
