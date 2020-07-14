@@ -2,5 +2,5 @@
 *.egg-info
 dist
 docs/build
-*::memory:*
+mymemory*
 build
