@@ -7,7 +7,6 @@ class ExampleTreeWidget( urwid.TreeWidget ):
         return self.get_node().get_value()['name']
 
 class ExampleNode(urwid.TreeNode):
-    """ Data storage object for leaf nodes """
     def load_widget(self):
         return ExampleTreeWidget(self)
 
