@@ -2,45 +2,24 @@ import urwid
 import os
 from time import time,sleep
 
-class ExampleTreeWidget( urwid.TreeWidget ):
-    def get_display_text(self):
-        return self.get_node().get_value()['name']
+class SelectableText( urwid.Text ):
+    def selectable( self ):
+        return True
 
-class ExampleNode(urwid.TreeNode):
-    def load_widget(self):
-        return ExampleTreeWidget(self)
+    def keypress( self, size, key ):
+        return key
 
-class ExampleParentNode( urwid.ParentNode ):
-    """ Data storage object for interior/parent nodes """
-    def load_widget(self):
-        return ExampleTreeWidget(self)
-
-    def load_child_keys(self):
-        data = self.get_value()
-        return range(len(data['children']))
-
-    def load_child_node(self, key):
-        """Return either an ExampleNode or ExampleParentNode"""
-        childdata = self.get_value()['children'][key]
-        childdepth = self.get_depth() + 1
-        if 'children' in childdata:
-            childclass = ExampleParentNode
-        else:
-            childclass = ExampleNode
-
-        return childclass(childdata, parent=self, key=key, depth=childdepth)
-
-
-class ExampleTreeBrowser:
+class jictmt:
     palette = [
         ('body', 'black', 'white'),
-        ('focus', 'light gray', 'dark blue', 'standout'),
-        ('head', 'yellow', 'black', 'standout'),
-        ('foot', 'light gray', 'black'),
-        ('key', 'light cyan', 'black','underline'),
-        ('title', 'white', 'black', 'bold'),
-        ('flag', 'dark gray', 'light gray'),
-        ('error', 'dark red', 'light gray'),
+        ('focus', 'light gray', 'dark blue', 'standout' ),
+        ('head', 'yellow', 'white', 'standout' ),
+        ('foot', 'light gray', 'black' ),
+        ('key', 'light cyan', 'black','underline' ),
+        ('title', 'white', 'black', 'bold' ),
+        ('flag', 'dark gray', 'light gray' ),
+        ('error', 'dark red', 'light gray' ),
+        ('reveal focus', 'black', 'dark cyan', 'standout')
     ]
 
     footer_text = [
@@ -56,14 +35,21 @@ class ExampleTreeBrowser:
         ('key', "Q"),
         ]
 
-    def __init__(self, data = None ):
-        self.topnode = ExampleParentNode( data )
+    def __init__(self, data ):
 
-        self.listbox = urwid.TreeListBox( urwid.TreeWalker(self.topnode) )
+        self.data = data
+        self.datak = list( data.keys() )
+
+        self.list = urwid.SimpleListWalker([
+            urwid.AttrWrap( SelectableText(x) , '',  'reveal focus' ) for x in data.keys()
+        ])
+
+        self.listbox = urwid.ListBox( self.list )
         self.listbox.offset_rows = 1
 
         self.columns = urwid.Columns([
-            self.listbox, urwid.Filler( urwid.Text( str(time()) ), 'top')
+            self.listbox,
+            urwid.Filler( urwid.Text( str(time()) ), 'top')
         ])
 
         self.header = urwid.Text( "" )
@@ -82,30 +68,24 @@ class ExampleTreeBrowser:
         )
 
         def alarma(x,y):
-            self.columns.contents[1] = (urwid.Filler(urwid.Text( str(time()) )), self.columns.options())
-            self.loop.set_alarm_in(1, alarma )
+            f = self.list.get_focus()
 
-        self.loop.set_alarm_in(1,alarma)
+            data = self.data[ self.datak[ int(f[1]) ] ]
+
+            if isinstance(data,list):
+                ls = ''
+
+                for x in data:
+                    ls += str( x ) + '\n'
+
+                data = ls
+
+            self.columns.contents[1] = (urwid.Filler(urwid.Text(
+                str( data )
+            ),'top'), self.columns.options())
+
+            self.loop.set_alarm_in( 0.5 , alarma )
+
+        self.loop.set_alarm_in( 0.5,alarma)
 
         self.loop.run()
-
-def get_example_tree():
-
-    retval = {"name":"parent","children":[]}
-    for i in range(3):
-        retval['children'].append({"name":"child " + str(i)})
-        retval['children'][i]['children']=[]
-        for j in range(5):
-            retval['children'][i]['children'].append({"name":"grandchild " +
-                                                      str(i) + "." + str(j)})
-
-    return retval
-
-
-def main():
-    sample = get_example_tree()
-    ExampleTreeBrowser(sample).main()
-
-
-if __name__=="__main__":
-    main()
