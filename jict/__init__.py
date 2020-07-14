@@ -4,6 +4,14 @@
 __version__ = '2.4'
 from .jict import jict, sqlconnect, evaluate
 from collections import deque
-from .menu import jictmt
+
+try:
+    import urwid
+    from .menu import jictmt
+except Exception as e:
+    class jictmt:
+        def __init__(self):
+            super(jictmt, self).__init__()
+            print('jictmt requires urwid')
 
 __all__ = ( 'jict', 'sqlconnect', 'evaluate', 'deque', 'jictmt' )
