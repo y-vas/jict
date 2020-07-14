@@ -12,7 +12,7 @@ class SelectableText( urwid.Text ):
 class jictmt:
     palette = [
         ('body', 'black', 'white'),
-        ('focus', 'light gray', 'dark blue', 'standout' ),
+        ('normal', 'black', 'white', 'standout' ),
         ('head', 'yellow', 'white', 'standout' ),
         ('foot', 'light gray', 'black' ),
         ('key', 'light cyan', 'black','underline' ),
@@ -23,16 +23,9 @@ class jictmt:
     ]
 
     footer_text = [
-        ('title', "Example Data Browser"), "    ",
+        ('title', " CONTROLS "), "    ",
         ('key', "UP"), ",", ('key', "DOWN"), ",",
-        ('key', "PAGE UP"), ",", ('key', "PAGE DOWN"),
-        "  ",
-        ('key', "+"), ",",
-        ('key', "-"), "  ",
-        ('key', "LEFT"), "  ",
-        ('key', "HOME"), "  ",
-        ('key', "END"), "  ",
-        ('key', "Q"),
+        "  "
         ]
 
     def __init__(self, data ):
@@ -41,7 +34,7 @@ class jictmt:
         self.datak = list( data.keys() )
 
         self.list = urwid.SimpleListWalker([
-            urwid.AttrWrap( SelectableText(x) , '',  'reveal focus' ) for x in data.keys()
+            urwid.AttrWrap( SelectableText(' - ' + x) , 'normal',  'reveal focus' ) for x in data.keys()
         ])
 
         self.listbox = urwid.ListBox( self.list )
@@ -69,19 +62,13 @@ class jictmt:
 
         def alarma(x,y):
             f = self.list.get_focus()
-
             data = self.data[ self.datak[ int(f[1]) ] ]
 
             if isinstance(data,list):
-                ls = ''
-
-                for x in data:
-                    ls += str( x ) + '\n'
-
-                data = ls
+                data = '\n    '.join( [str(x) for x in data] )
 
             self.columns.contents[1] = (urwid.Filler(urwid.Text(
-                str( data )
+                '\n    ' + str( data )
             ),'top'), self.columns.options())
 
             self.loop.set_alarm_in( 0.5 , alarma )
