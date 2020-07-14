@@ -54,7 +54,7 @@ class jictmt:
             footer= self.footer
         )
 
-    def main(self):
+    def main( self ):
         self.loop = urwid.MainLoop(
             self.view,
             self.palette,
