@@ -62,7 +62,7 @@ class jictmt:
 
         def alarma(x,y):
             f = self.list.get_focus()
-            data = self.data[ self.datak[ int( f[1] if f[1] != None else f[1]) ] ]
+            data = self.data[ self.datak[ int( f[1] if f[1] != None else 0 ) ] ]
 
             if isinstance(data,list):
                 data = '\n    '.join( [str(x) for x in data] )
