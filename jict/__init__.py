@@ -12,6 +12,6 @@ except Exception as e:
     class jictmt:
         def __init__(self):
             super(jictmt, self).__init__()
-            print('jictmt requires urwid')
+            print( 'jictmt requires urwid, install by pip3 install urwid' )
 
 __all__ = ( 'jict', 'sqlconnect', 'evaluate', 'deque', 'jictmt' )
