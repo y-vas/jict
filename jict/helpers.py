@@ -13,4 +13,5 @@ def evaluate(foo, itter=1 , threaded = False ):
     t0 = time()
     for _ in range(itter):
         foo()
+        
     print( time() - t0, "seconds wall time" )

@@ -100,7 +100,7 @@ class jict( defaultdict ):
             try:
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
 
-                    if nd[:6] == 'shm//:':
+                    if nd[:6] == 'shm//:' and nd[-5:] == '.json':
                         nd = nd[6:]
                         dt = to_jict( loader(nd) )
                         dt.storepath = nd

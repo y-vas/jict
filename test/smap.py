@@ -14,7 +14,6 @@ while True:
     mm.resize( nsl )
 
     mm.write(ns)
-
     mm.seek(0)
 
 mm.flush()
