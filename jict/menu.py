@@ -29,7 +29,6 @@ class jictmt:
         ]
 
     def __init__(self, data ):
-
         self.data = data
         self.datak = list( data.keys() )
 
