@@ -1,6 +1,6 @@
 from jict import jict, jictmt
 #
-jct = jict('get://mymemory.yaml')
+jct = jict('shm//:config.yaml')
 
 jct['151'] = 'dsfasd'
 jct['153'] = 'aaaaaa'

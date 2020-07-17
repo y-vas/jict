@@ -3,7 +3,7 @@ from __future__ import print_function
 from __future__ import division
 
 from collections import defaultdict , deque
-import sys, json, yaml, os, random, re ,copy, importlib
+import sys, json, yaml, os, random, re ,copy, importlib, mmap
 from bson.objectid import ObjectId
 
 from time import time
@@ -18,9 +18,6 @@ try:
     import mysql.connector
 except:
     nolibs.append('mysql-connector')
-
-# if 'tensorflow' in sys.modules:
-#     import tensorflow
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -49,18 +46,13 @@ def sqlconnect(str):
 
     return cnt
 
-def evaluate(foo, itter=1 , threads = 1 ):
-    # if threads > 1:
-    #     for _ in range(threads):
-    #         t = Thread(target=tht)
-
-    t0 = time()
-    for _ in range(itter):
-        foo()
-    print( time() - t0, "seconds wall time" )
-
 def loader(nd):
     nam, ext = os.path.splitext( nd )
+
+    if not os.path.exists( nd ):
+        file = open( nd, "w+" )
+        file.write('{}')
+        file.close()
 
     file = open( nd, "r+" )
     text = file.read()
@@ -95,13 +87,6 @@ def to_jict(prev):
             nd[k] = i
     return nd
 
-def subscribe(file):
-    jct = jict( file )
-    jct.subsc = True
-    jct.storepath = file
-    while True:
-        yield jct
-
 class jict( defaultdict ):
     generator = None
     storepath = None
@@ -114,23 +99,20 @@ class jict( defaultdict ):
         if isinstance( nd, str ):
             try:
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
-                    share, subsc = False ,False
 
-                    if nd[:6] == 'set://':
-                        share = True
+                    if nd[:6] == 'shm//:':
                         nd = nd[6:]
-                    elif nd[:6] == 'get://':
-                        subsc = True
-                        nd = nd[6:]
-                    elif nd[:6] == 'sub://':
-                        return subscribe(nd[6:])
+                        dt = to_jict( loader(nd) )
+                        dt.storepath = nd
+
+                        f = open( nd, "r+b" )
+                        dt.file = mmap.mmap( f.fileno() , 0 )
+                        return dt
 
                     if not os.path.exists( nd ):
                         open( nd , 'w+' ).close()
 
                     dt = to_jict( loader(nd) )
-                    if share: dt.share = True
-                    if subsc: dt.subsc = True
                     dt.storepath = nd
                 else:
                     dt = to_jict( json.loads( nd ) )
@@ -371,27 +353,75 @@ class jict( defaultdict ):
     def __getitem__(self,key):
         jct = super( defaultdict, self ).__getitem__(key)
 
-        if hasattr( self , 'subsc' ):
-            jct = jict( self.storepath  )
-            return jct[key]
+        # stops the infinite get
+        if hasattr( self , 'skig' ):
+            return jct
+
+        if hasattr( self , 'file' ):
+            mm = self.file
+            mm.seek( 0 )
+            text = mm.read(mm.size())
+            data = json.loads( text )
+            dt = jict( data )
+            val = dt[key]
+
+            setattr(self,'skip',True)
+            self[key] = val
+            del self.skip
+            return val
 
         return jct
 
     def __setitem__( self , key , data ):
         super(defaultdict, self).__setitem__( key , data )
 
-        if hasattr( self , 'share' ):
-            self.save()
+        # stops the infinite set
+        if hasattr( self , 'skip' ):
+            return
+
+        if hasattr( self , 'file' ):
+            mm = self.file
+
+            setattr(self,'skig',True)
+            ns = bytes( self.json( 0 ) , 'utf-8')
+            del self.skig
+            mm.seek( 0 )
+            if mm.size() != len( ns ):
+                mm.resize( len( ns ) )
+
+            mm.seek( 0 )
+            mm.write(ns)
 
     def deque(self,key,data,maxlen = 5 ):
-        if not isinstance(self[key],deque):
-            self[key] = deque(maxlen = maxlen)
+        if not isinstance(self[key], deque ):
+            if isinstance(self[key], list ):
+                self[key] = deque(self[key], maxlen = maxlen)
+            else:
+                self[key] = deque(maxlen = maxlen)
 
-        self[key].append(data)
-        if hasattr(self,'share'):
-            self.save()
+        self[key].append( data )
+        if hasattr( self , 'file' ):
+            mm = self.file
+
+            setattr(self,'skig',True)
+            ns = bytes( self.json( 0 ) , 'utf-8')
+            del self.skig
+
+            mm.seek( 0 )
+            if mm.size() != len( ns ):
+                mm.resize( len( ns ) )
+
+            mm.seek( 0 )
+            mm.write(ns)
+
+    def close(self):
+        if hasattr( self , 'file' ):
+            self.file.flush()
+            self.file.close()
 
     def save(self, name = None, tp = None , shm = '' ):
+        if hasattr( self , 'file' ):
+            return
 
         if name != None:
 
