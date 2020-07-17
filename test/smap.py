@@ -1,22 +1,23 @@
 import mmap
-
-# write a simple example file
-with open('config.json', "wb") as f:
-    f.write(b"Hello Python!\n")
+from time import time,sleep
+from datetime import datetime as dt
+from threading import Thread
 
 with open("config.json", "r+b") as f:
     mm = mmap.mmap(f.fileno(), 0 )
 
-    ns = b"Hello vasafsdfasdfasdfasdfalyyl!\n"
-    nsl = len(ns)
-    print(nsl)
+    while True:
+        ns = bytes(str( dt.now() ), 'utf-8')
+        nsl = len( ns )
 
-    mm.seek(0)
-    mm.resize( nsl )
+        mm.seek(0)
+        mm.resize( nsl )
 
-    mm.write(ns)
+        mm.write(ns)
 
-    mm.seek(0)
-    print(mm.readline())  # prints b"Hello Python!\n"
+        mm.seek(0)
+        print(mm.readline())  # prints b"Hello Python!\n"
+        # sleep(0.1)
+
     mm.flush()
     mm.close()

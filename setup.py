@@ -34,7 +34,16 @@ setup(
     author_email='yovdiyvasyl@gmail.com',
     url = "https://github.com/y-vas/jict",
     setup_requires = [],
-    keywords = [ "nested", "jict", "defaultdict", "dictionary", "auto-vivification",'shared-array' ],
+    keywords = [
+        "nested",
+        "jict",
+        "defaultdict",
+        "dictionary",
+        "auto-vivification",
+        'shared-array',
+        'shared-memory-json',
+        'shared-memory-yaml'
+    ],
     license = "MIT",
     classifiers=[
         "Topic :: Utilities",
