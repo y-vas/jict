@@ -5,7 +5,6 @@ from __future__ import division
 from collections import defaultdict , deque
 import sys, json, yaml, os, random, re ,copy, importlib, mmap
 from bson.objectid import ObjectId
-
 from time import time
 
 nolibs = []
@@ -147,9 +146,11 @@ class jict( defaultdict ):
             for x in self.generator:
                 yield to_jict(x)
 
-    def init(self,key,deft):
+    # creates a default valuef for the key if doesn't has on
+    def init(self,key, deft ):
         if key in self.keys():
             return self[key]
+
         self[key] = deft
         return self[key]
 
@@ -179,7 +180,8 @@ class jict( defaultdict ):
                 self[key] = val
                 return self[key]
 
-        if self[key] == None: self[key] = 0
+        if self[key] == None:
+            self[key] = 0
 
         self[key] = val if val > self[key] else self[key]
         return self[key]
@@ -191,7 +193,8 @@ class jict( defaultdict ):
                 self[key] = val
                 return self[key]
 
-        if self[key] == None: self[key] = 10 ** 15
+        if self[key] == None:
+            self[key] = 10 ** 15
 
         self[key] = val if val < self[key] else self[key]
         return self[key]
@@ -423,15 +426,15 @@ class jict( defaultdict ):
         if hasattr( self , 'file' ):
             return
 
-        if name != None:
-
-            valid = ['sql://']
-
-            for x in valid:
-                if len(name) >= len(x) and name[:len(x)] == x:
-                    if name[:len(x)] == 'sql://':
-                        self.sql_store(name[len(x):])
-                        return
+        # if name != None:
+        #
+        #     valid = ['sql://']
+        #
+        #     for x in valid:
+        #         if len(name) >= len(x) and name[:len(x)] == x:
+        #             if name[:len(x)] == 'sql://':
+        #                 self.sql_store(name[len(x):])
+        #                 return
 
 
         self.storepath = name if name != None else self.storepath \
@@ -445,22 +448,22 @@ class jict( defaultdict ):
         f.write( self.yaml() if tp == '.yaml' else self.json() )
         f.close()
 
-    def sql_store(self,db):
-        connection = sqlconnect()
-
-        skip = ['columns']
-
-        for table in self.keys():
-            lines = self[table]
-
-            if table in skip:
-                continue
-
-            for line in lines:
-                print( line )
-
-        cursor.close()
-        connection.close()
-
-        del cursor
-        del connection
+    # def sql_store(self,db):
+    #     connection = sqlconnect()
+    #
+    #     skip = ['columns']
+    #
+    #     for table in self.keys():
+    #         lines = self[table]
+    #
+    #         if table in skip:
+    #             continue
+    #
+    #         for line in lines:
+    #             print( line )
+    #
+    #     cursor.close()
+    #     connection.close()
+    #
+    #     del cursor
+    #     del connection
