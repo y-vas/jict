@@ -1,5 +1,5 @@
 
-def eval_base(jct):
+def eval_base( jct ):
     jct['base'] = 1
     if jct['base'] != 1:
         raise Exception(' base is not == 1 :', jct['base'])
@@ -16,9 +16,16 @@ def eval_base(jct):
     if jct['base3'] != 5:
         raise Exception(' init not set properly :', jct['base3'])
 
+    # ---- test iad
+    # default dict
+    jct['RELES'] = [
+        {'id':33,'status':False },
+        {'id':37,'status':False }
+    ]
 
-    # test iad
-    # default dict 
-
+    jct['RELES'] += [
+        { 'id':33,'status': False },
+        { 'id':37,'status': False }
+    ]
 
     print( jct )

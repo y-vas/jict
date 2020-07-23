@@ -22,7 +22,6 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
-
         if isinstance(o, deque):
             return list(o)
 
@@ -40,9 +39,11 @@ def sqlconnect(str):
     , str )[0]
 
     cnt = mysql.connector.connect(
-        host=host, database=database, user=user, password=pawd
+        host=host,
+        database=database,
+        user=user,
+        password=pawd
     )
-
     return cnt
 
 def loader(nd):
@@ -99,7 +100,7 @@ class jict( defaultdict ):
             try:
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
 
-                    if nd[:6] == 'shm//:' and nd[-5:] == '.json':
+                    if (nd[:6] == 'shm//:' or nd[:6] == 'set://') and nd[-5:] == '.json':
                         nd = nd[6:]
                         dt = to_jict( loader(nd) )
                         dt.storepath = nd
