@@ -461,7 +461,7 @@ class jict( defaultdict ):
         self.storepath = nam + tp
 
         f = open(self.storepath, "w+")
-        if tp == '.example' or nam == '.env':
+        if tp == '.example' or self.storepath[-4:] == '.env':
             txt = ''
             for x in self.keys():
                 if isinstance( self[x] ,str ):
