@@ -22,7 +22,6 @@ def eval_base( jct ):
         {'id':33,'status':False },
         {'id':37,'status':False }
     ]
-
     jct['RELES'] += [
         { 'id':33,'status': False },
         { 'id':37,'status': False }
@@ -30,5 +29,3 @@ def eval_base( jct ):
 
     if len(jct['RELES']) != 4:
         raise Exception('add not done correctly :', jct['RELES'])
-
-    

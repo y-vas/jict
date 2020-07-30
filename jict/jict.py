@@ -461,12 +461,11 @@ class jict( defaultdict ):
         self.storepath = nam + tp
 
         f = open(self.storepath, "w+")
-        if tp == '.example' or tp == '.env':
+        if tp == '.example' or nam == '.env':
             txt = ''
             for x in self.keys():
-                if isinstance( self[x] ,str):
+                if isinstance( self[x] ,str ):
                     txt += f'{x}={self[x]}\n'
-
             f.write( txt )
         elif tp == '.yaml':
             f.write( self.yaml() )
