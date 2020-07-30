@@ -8,3 +8,6 @@ from jict import jict
 
 jct = jict()
 eval_base( jct )
+jct = jict('eval/.env.example')
+eval_base( jct )
+jct.save()

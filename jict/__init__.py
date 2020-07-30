@@ -2,7 +2,7 @@
 
 """`jict` provides dictionaries with multiple levels of nested-ness."""
 
-__version__ = '2.4.3'
+__version__ = '2.4.4'
 from .jict import jict, sqlconnect
 from .helpers import evaluate
 from collections import deque
@@ -11,7 +11,6 @@ try:
     import urwid
     from .menu import jictmt
 except Exception as e:
-
     class jictmt:
         def __init__(self):
             super(jictmt, self).__init__()

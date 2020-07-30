@@ -28,4 +28,7 @@ def eval_base( jct ):
         { 'id':37,'status': False }
     ]
 
-    print( jct )
+    if len(jct['RELES']) != 4:
+        raise Exception('add not done correctly :', jct['RELES'])
+
+    

@@ -97,6 +97,7 @@ class jict( defaultdict ):
 
         if isinstance( nd, str ):
             try:
+
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
 
                     if (nd[:6] == 'shm//:' or nd[:6] == 'set://') and nd[-5:] == '.json':
@@ -113,11 +114,27 @@ class jict( defaultdict ):
 
                     dt = to_jict( loader(nd) )
                     dt.storepath = nd
+                elif nd[-4:] == '.env' or '.env.example' in nd:
+                    file = open( nd, "r+" )
+                    text = file.read()
+                    file.close()
+                    jct = jict()
+                    for x in text.split('\n'):
+                        if x == '': continue
+                        if '=' in x:
+                            fields = x.split('=')
+                            if len(fields) == 2:
+                                k,v = fields
+                                jct[k] = v
+
+                    jct.storepath = nd
+                    return jct
                 else:
                     dt = to_jict( json.loads( nd ) )
             except Exception as e:
                 print(e)
                 dt = jict()
+
             return dt
 
 
@@ -436,7 +453,6 @@ class jict( defaultdict ):
         #                 self.sql_store(name[len(x):])
         #                 return
 
-
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
 
@@ -445,7 +461,18 @@ class jict( defaultdict ):
         self.storepath = nam + tp
 
         f = open(self.storepath, "w+")
-        f.write( self.yaml() if tp == '.yaml' else self.json() )
+        if tp == '.example' or tp == '.env':
+            txt = ''
+            for x in self.keys():
+                if isinstance( self[x] ,str):
+                    txt += f'{x}={self[x]}\n'
+
+            f.write( txt )
+        elif tp == '.yaml':
+            f.write( self.yaml() )
+        else:
+            f.write( self.json() )
+
         f.close()
 
     # def sql_store(self,db):
