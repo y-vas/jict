@@ -36,7 +36,6 @@ def sqlconnect(str):
     user,pawd,host,database = re.findall(
         "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)"
     , str )[0]
-
     cnt = mysql.connector.connect(
         host=host,
         database=database,
@@ -100,7 +99,7 @@ class jict( defaultdict ):
 
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
 
-                    if (nd[:6] == 'shm//:' or nd[:6] == 'set://') and nd[-5:] == '.json':
+                    if ( nd[:6] == 'shm//:' or nd[:6] == 'set://' ) and nd[-5:] == '.json':
                         nd = nd[6:]
                         dt = to_jict( loader(nd) )
                         dt.storepath = nd
