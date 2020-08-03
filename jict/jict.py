@@ -57,7 +57,9 @@ def loader(nd):
     file.close()
 
     data = {}
-    if ext == '.yaml' and text.strip() != '':
+    if text.strip() == '':
+        return data
+    elif ext == '.yaml':
         data = yaml.safe_load( text )
     elif ext == '.json':
         data = json.loads(text )
@@ -190,6 +192,9 @@ class jict( defaultdict ):
         return self
 
     def increase(self,key,val,create = False ):
+        print('increase : function is deprecated us "set_max" instead')
+        return self.set_max(key,val,create)
+    def set_max(self,key,val,create = False):
         if key not in self.keys():
             if not create: return self[key]
             else:
@@ -203,6 +208,9 @@ class jict( defaultdict ):
         return self[key]
 
     def decrease(self,key,val,create = False ):
+        print('decrease : function is deprecated us "set_min" instead')
+        return self.set_min(key,val,create)
+    def set_min(self,key,val,create = False ):
         if key not in self.keys():
             if not create: return self[key]
             else:
