@@ -4,3 +4,5 @@ dist
 docs/build
 mymemory*
 build
+.env
+test.json

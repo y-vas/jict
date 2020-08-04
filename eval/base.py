@@ -22,6 +22,7 @@ def eval_base( jct ):
         {'id':33,'status':False },
         {'id':37,'status':False }
     ]
+
     jct['RELES'] += [
         { 'id':33,'status': False },
         { 'id':37,'status': False }
@@ -29,3 +30,9 @@ def eval_base( jct ):
 
     if len(jct['RELES']) != 4:
         raise Exception('add not done correctly :', jct['RELES'])
+
+
+    # jct = jict({"1":{"name":"bob","age":"20","work":"Assistant"}})
+    # jct2 = jict({"2":{"name":"James","age":"36","work":"Dev"}})
+    # jct.replace({"name":"bob","age":"25","work":"Dev"})
+    # jct2.replace({"name": "James", "age": "40", "work": "Assistant"})
