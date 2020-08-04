@@ -11,6 +11,7 @@ jct = jict('eval/.env.example')
 eval_base( jct )
 jct.save('eval/.env')
 
+# store json
 jct = jict('eval/test.json')
 eval_base( jct )
 jct.save()
