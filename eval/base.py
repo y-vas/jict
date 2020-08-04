@@ -41,7 +41,6 @@ def eval_base( jct ):
     if (add - 1) != now:
         raise Exception('add not done correctly :', jct['to_follow'])
 
-
     # jct = jict({"1":{"name":"bob","age":"20","work":"Assistant"}})
     # jct2 = jict({"2":{"name":"James","age":"36","work":"Dev"}})
     # jct.replace({"name":"bob","age":"25","work":"Dev"})
