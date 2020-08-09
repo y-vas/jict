@@ -149,12 +149,6 @@ class jict( defaultdict ):
 
         return super(jict, self).__new__(self, nd )
 
-    def has(self, args):
-        keys= self.keys()
-        for x in args:
-            if x not in keys: return False
-        return True
-        
     def __init__(self, nd = None ):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
@@ -169,6 +163,12 @@ class jict( defaultdict ):
 
             for x in self.generator:
                 yield to_jict(x)
+
+    def has(self, args ):
+        keys= self.keys()
+        for x in args:
+            if x not in keys: return False
+        return True
 
     # creates a default valuef for the key if doesn't has on
     def init(self,key, deft ):
@@ -386,7 +386,6 @@ class jict( defaultdict ):
     def __getitem__(self,key):
         jct = super( defaultdict, self ).__getitem__(key)
 
-        # stops the infinite get
         if hasattr( self , 'skig' ):
             return jct
 
@@ -457,7 +456,6 @@ class jict( defaultdict ):
             return
 
         # if name != None:
-        #
         #     valid = ['sql://']
         #
         #     for x in valid:
