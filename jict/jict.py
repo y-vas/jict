@@ -149,6 +149,12 @@ class jict( defaultdict ):
 
         return super(jict, self).__new__(self, nd )
 
+    def has(self, args):
+        keys= self.keys()
+        for x in args:
+            if x not in keys: return False
+        return True
+        
     def __init__(self, nd = None ):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
