@@ -98,7 +98,7 @@ class jict( defaultdict ):
             jct = jict()
             k = nd.find({'key':extra})
             if k.count() >= 1:
-                jct = jict(next(k))
+                jct = jict(json.loads(next(k)['data']))
 
             jct.generator = nd
             jct.storepath = extra
@@ -451,10 +451,10 @@ class jict( defaultdict ):
                     self['_id'] = next(k)['_id']
 
             if '_id' not in self.keys():
-                self.generator.insert_one({ 'data':self.dict(), 'key': self.storepath })
+                self.generator.insert_one({ 'data':self.json(), 'key': self.storepath })
             else:
                 self.generator.update_one(
-                    { '_id':self['_id'] },{ '$set':{'data':self.dict()} }
+                    { '_id':self['_id'] },{ '$set':{'data':self.json()} }
                 )
 
             return
