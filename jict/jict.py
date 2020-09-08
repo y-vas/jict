@@ -6,16 +6,14 @@ from collections import defaultdict , deque
 import sys, json, yaml, os, random, re ,copy, importlib, mmap
 from bson.objectid import ObjectId
 from time import time
+
+from pymongo.collection import Collection as mgcoll
 nolibs = []
 
 try:
-    from pymongo.cursor import Cursor
-except Exception as e:
-    nolibs.append('pymongo')
-try:
     import mysql.connector
 except:
-    nolibs.append('mysql-connector')
+    nolibs.append( 'mysql-connector' )
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -91,16 +89,25 @@ class jict( defaultdict ):
     generator = None
     storepath = None
 
-    def __new__(self, nd = None ):
+    def __new__(self, nd = None, extra = None):
         if isinstance( nd, dict ):
             dt = to_jict(nd)
             return dt
 
-        if isinstance( nd, str ):
+        elif isinstance( nd , mgcoll ):
+            jct = jict()
+
+            if '_id' not in self.keys():
+                k = nd.find({'key':extra})
+                if k.count() >= 1:
+                    jct = jict(next(k))
+
+            jct.generator = nd
+            jct.storepath = extra
+            return jct
+        elif isinstance( nd, str ):
             try:
-
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
-
                     if ( nd[:6] == 'shm//:' or nd[:6] == 'set://' ) and nd[-5:] == '.json':
                         nd = nd[6:]
                         dt = to_jict( loader(nd) )
@@ -133,19 +140,9 @@ class jict( defaultdict ):
                 else:
                     dt = to_jict( json.loads( nd ) )
             except Exception as e:
-                print(e)
                 dt = jict()
 
             return dt
-
-
-        if 'pymongo' not in nolibs and isinstance( nd, Cursor ):
-            try:
-                jt = jict( next(nd) )
-                jt.generator = nd
-            except:
-                jt = jict()
-            return jt
 
         return super(jict, self).__new__(self, nd )
 
@@ -153,16 +150,16 @@ class jict( defaultdict ):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
 
-    def __iter__(self):
-        started = False
-
-        if self.generator != None:
-            if not started:
-                started = True
-                yield jict(self.dict())
-
-            for x in self.generator:
-                yield to_jict(x)
+    # def __iter__(self):
+    #     started = False
+    #
+    #     if self.generator != None:
+    #         if not started:
+    #             started = True
+    #             yield jict(self.dict())
+    #
+    #         for x in self.generator:
+    #             yield to_jict(x)
 
     def has(self, args ):
         keys= self.keys()
@@ -197,9 +194,6 @@ class jict( defaultdict ):
 
         return self
 
-    def increase(self,key,val,create = False ):
-        print('increase : function is deprecated us "set_max" instead')
-        return self.set_max(key,val,create)
     def set_max(self,key,val,create = False):
         if key not in self.keys():
             if not create: return self[key]
@@ -213,9 +207,6 @@ class jict( defaultdict ):
         self[key] = val if val > self[key] else self[key]
         return self[key]
 
-    def decrease(self,key,val,create = False ):
-        print('decrease : function is deprecated us "set_min" instead')
-        return self.set_min(key,val,create)
     def set_min(self,key,val,create = False ):
         if key not in self.keys():
             if not create: return self[key]
@@ -455,6 +446,20 @@ class jict( defaultdict ):
         if hasattr( self , 'file' ):
             return
 
+        if isinstance(self.generator, mgcoll ):
+            if '_id' not in self.keys():
+                k = self.generator.find({'key':self.storepath})
+                if k.count() >= 1:
+                    self['_id'] = next(k)['_id']
+
+            if '_id' not in self.keys():
+                self.generator.insert_one({ 'data':self.dict(), 'key': self.storepath })
+            else:
+                self.generator.update_one(
+                    { '_id':self['_id'] },{ '$set':{'data':self.dict()} }
+                )
+
+            return
         # if name != None:
         #     valid = ['sql://']
         #
