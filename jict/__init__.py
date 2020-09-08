@@ -2,7 +2,7 @@
 
 """`jict` provides dictionaries with multiple levels of nested-ness."""
 
-__version__ = '2.5'
+__version__ = '2.5.1'
 from .jict import jict, sqlconnect
 from .helpers import evaluate
 from collections import deque
