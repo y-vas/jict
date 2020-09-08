@@ -96,14 +96,12 @@ class jict( defaultdict ):
 
         elif isinstance( nd , mgcoll ):
             jct = jict()
-
             k = nd.find({'key':extra})
             if k.count() >= 1:
                 jct = jict(next(k))
 
             jct.generator = nd
             jct.storepath = extra
-
             return jct
         elif isinstance( nd, str ):
             try:
