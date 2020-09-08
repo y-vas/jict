@@ -97,13 +97,13 @@ class jict( defaultdict ):
         elif isinstance( nd , mgcoll ):
             jct = jict()
 
-            if '_id' not in self.keys():
-                k = nd.find({'key':extra})
-                if k.count() >= 1:
-                    jct = jict(next(k))
+            k = nd.find({'key':extra})
+            if k.count() >= 1:
+                jct = jict(next(k))
 
             jct.generator = nd
             jct.storepath = extra
+
             return jct
         elif isinstance( nd, str ):
             try:
@@ -146,7 +146,7 @@ class jict( defaultdict ):
 
         return super(jict, self).__new__(self, nd )
 
-    def __init__(self, nd = None ):
+    def __init__(self, nd = None , extra = ''):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
 
