@@ -227,7 +227,7 @@ class jict( defaultdict ):
                 if isinstance(l,list):
                     ittrlis(l,tar)
 
-        for x in self.keys():
+        for x in list(self):
             val = self[x]
             if isinstance(val , jict):
                 val.drop( target )
@@ -240,7 +240,7 @@ class jict( defaultdict ):
 
         if as_t == 'dict':
             return self.dict()
-            
+
         return self
 
     def rename(self,target,replace):
