@@ -165,7 +165,7 @@ class jict( defaultdict ):
             if x not in keys: return False
         return True
 
-    # creates a default valuef for the key if doesn't has on
+    # creates a default valuef for the key if doesn't has one
     def init(self,key, deft ):
         if key in self.keys():
             return self[key]
@@ -237,6 +237,8 @@ class jict( defaultdict ):
 
             if val == target:
                 del self[x]
+
+        return self
 
     def rename(self,target,replace):
         def ittrlist(lst,tg,rp):
