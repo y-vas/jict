@@ -175,16 +175,20 @@ class jict( defaultdict ):
 
     def take(self, key , deft , format = '__deft__' ):
         if key in self:
-            if format == '__deft__':
-                return self[key]
-            elif type(self[key]) == format:
-                return self[key]
-            elif format == int:
-                return int(self[key])
-            elif format == str:
-                return str(self[key])
-            elif format == float:
-                return float(self[key])
+            try:
+                if format == '__deft__':
+                    return self[key]
+                elif type(self[key]) == format:
+                    return self[key]
+                elif format == int:
+                    return int(self[key])
+                elif format == str:
+                    return str(self[key])
+                elif format == float:
+                    return float(self[key])
+            except:
+                pass
+
 
         self[key] = deft
         return self[key]
