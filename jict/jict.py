@@ -218,7 +218,7 @@ class jict( defaultdict ):
         self[key] = val if val < self[key] else self[key]
         return self[key]
 
-    def drop(self ,target = None):
+    def drop(self ,target = None, as_type=''):
 
         def ittrlis(val,tar):
             for l in val:
@@ -238,6 +238,9 @@ class jict( defaultdict ):
             if val == target:
                 del self[x]
 
+        if as_t == 'dict':
+            return self.dict()
+            
         return self
 
     def rename(self,target,replace):
