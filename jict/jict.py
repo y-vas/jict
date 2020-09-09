@@ -173,6 +173,22 @@ class jict( defaultdict ):
         self[key] = deft
         return self[key]
 
+    def take(self, key , deft , format = '__deft__' ):
+        if key in self:
+            if format == '__deft__':
+                return self[key]
+            elif type(self[key]) == format:
+                return self[key]
+            elif format == int:
+                return int(self[key])
+            elif format == str:
+                return str(self[key])
+            elif format == float:
+                return float(self[key])
+
+        self[key] = deft
+        return self[key]
+
     def __iadd__(self, other):
         typ = type(other)
 
