@@ -238,7 +238,7 @@ class jict( defaultdict ):
             if val == target:
                 del self[x]
 
-        if as_t == 'dict':
+        if as_type == 'dict':
             return self.dict()
 
         return self
