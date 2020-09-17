@@ -6,6 +6,7 @@ from collections import defaultdict , deque
 import sys, json, yaml, os, random, re ,copy, importlib, mmap
 from bson.objectid import ObjectId
 from time import time
+from datetime import timedelta as td, datetime as dt
 
 from pymongo.collection import Collection as mgcoll
 nolibs = []
@@ -186,12 +187,22 @@ class jict( defaultdict ):
                     return str(self[key])
                 elif format == float:
                     return float(self[key])
+                elif format == list:
+                    return []
             except:
                 pass
 
 
         self[key] = deft
         return self[key]
+
+    def strptime(self,key,pattern):
+        return dt.strptime( self[key] ,pattern )
+
+    def strptimestamp(self,key,pattern):
+        if key not in self:
+            return None
+        return dt.timestamp( dt.strptime( self[key] ,pattern ) )
 
     def __iadd__(self, other):
         typ = type(other)
@@ -238,7 +249,7 @@ class jict( defaultdict ):
         self[key] = val if val < self[key] else self[key]
         return self[key]
 
-    def drop(self ,target = None, as_type=''):
+    def drop(self ,target = None, as_type='', deep = False ):
 
         def ittrlis(val,tar):
             for l in val:
@@ -251,6 +262,15 @@ class jict( defaultdict ):
             val = self[x]
             if isinstance(val , jict):
                 val.drop( target )
+
+                if deep:
+                    skp = False
+                    for y in val:
+                        if val[y] != target:
+                            skp = True; break
+                    if not skp:
+                        del self[x]
+                        continue
 
             if isinstance(val , list ):
                 ittrlis(val, target)
