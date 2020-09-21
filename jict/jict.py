@@ -28,21 +28,6 @@ class JSONEncoder(json.JSONEncoder):
         except:
             return str(o)
 
-def sqlconnect(str):
-    if 'mysql-connector' in nolibs:
-        raise Exception('strore sql rquieres \'mysql-connector\' module')
-
-    user,pawd,host,database = re.findall(
-        "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)"
-    , str )[0]
-    cnt = mysql.connector.connect(
-        host=host,
-        database=database,
-        user=user,
-        password=pawd
-    )
-    return cnt
-
 def loader(nd):
     nam, ext = os.path.splitext( nd )
 
@@ -121,6 +106,17 @@ class jict( defaultdict ):
 
                     dt = to_jict( loader(nd) )
                     dt.storepath = nd
+
+                elif nd[-5:] == '.list':
+                    file = open( nd, "r+" )
+                    text = file.read()
+                    file.close()
+                    ls = []
+                    for x in text.split('\n'):
+                        if x == '': continue
+                        ls.append(x)
+
+                    return ls
                 elif nd[-4:] == '.env' or '.env.example' in nd:
                     file = open( nd, "r+" )
                     text = file.read()
