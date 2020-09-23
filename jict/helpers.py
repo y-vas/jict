@@ -34,10 +34,12 @@ def sqlconnect(str):
 
 
 def file( *args, **kwargs ):
+    dirname = os.path.dirname(filestr)
+
     if os.path.isfile( filestr ):
         return open( *args, **kwargs )
 
-    elif (dirname:=os.path.dirname(filestr)):
+    else:
         if not os.path.exists( dirname ):
             os.makedirs( dirname )
 
