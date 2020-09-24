@@ -7,7 +7,6 @@ import sys, json, yaml, os, random, re ,copy, importlib, mmap
 from bson.objectid import ObjectId
 from time import time
 from datetime import timedelta as td, datetime as dt
-
 from pymongo.collection import Collection as mgcoll
 nolibs = []
 
@@ -47,16 +46,6 @@ def to_jict(prev):
     for k,i in prev.items():
         if isinstance(i,dict):
             nd[k] = to_jict(i)
-
-        # elif isinstance(i,list):
-        #     nl = []
-        #     for l in i:
-        #         if isinstance(l,dict):
-        #             nl.append(to_jict(l))
-        #         else:
-        #             nl.append(l)
-        #     nd[k] = nl
-
         else:
             nd[k] = i
     return nd
@@ -80,26 +69,23 @@ class jict( defaultdict ):
             jct.storepath = extra
             return jct
         elif isinstance( nd, str ):
-            size = len( nd )
-
             append = [ '.yaml' , '.json', '.list', '.env', '.env.example']
-            prepend= [ 'shm//:', 'set://' ]
-
-            transf = ''
-            prepsf = ''
-            file = False
+            # prepend= [ 'shm//:', 'set://' ]
+            dt,transf,prepsf,file,size = None,'','',False,len(nd)
 
             for x in append:
                 xs = len(x)
                 if xs => size: continue
-                if nd[xs:] == x:
-                    file, transf = True, x
-
-            for x in prepend:
-                xs = len(x)
-                if xs => size: continue
-                if nd[:xs] == x:
-                    prepsf = x; nd = nd[xs:]
+                if nd[xs:]==x:
+                    file,transf=True,x
+                    break
+            #
+            # for x in prepend:
+            #     xs = len(x)
+            #     if xs => size: continue
+            #     if nd[:xs]==x:
+            #         prepsf,nd=x,nd[xs:]
+            #         break
 
             if file:
                 if not os.path.isfile( nd ):
@@ -108,10 +94,9 @@ class jict( defaultdict ):
                     f = open( nd , 'w+' ); f.write("{}"); f.close()
                     transf = ''
 
-            dt = None
             if transf in [ '.yaml' , '.json' ]:
                 dt = to_jict(loader( nd , transf ))
-
+                jct.storepath = nd
             elif transf in ['.env','.env.example','.list']:
                 lst = [x for x in open(nd,"r+").read().split('\n') if x !='']
                 if transf == '.list':
@@ -121,27 +106,7 @@ class jict( defaultdict ):
                     jct.storepath = nd
                     dt = jct
             else:
-                dt
-
-
-            # try:
-            #     if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
-            #         if ( nd[:6] == 'shm//:' or nd[:6] == 'set://' ) and nd[-5:] == '.json':
-            #             nd = nd[6:]
-            #
-            #             dt.storepath = nd
-            #
-            #             f = open( nd, "r+b" )
-            #             dt.file = mmap.mmap( f.fileno() , 0 )
-            #             return dt
-            #
-            #         if not os.path.exists( nd ):
-            #             open( nd , 'w+' ).close()
-            #
-            #         dt = to_jict( loader(nd) )
-            #         dt.storepath = nd
-            #
-            #         dt = to_jict( json.loads( nd ) )
+                dt = jict()
 
             return dt
 
