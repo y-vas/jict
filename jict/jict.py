@@ -1,21 +1,12 @@
 #!/usr/bin/env python
-from __future__ import print_function
-from __future__ import division
-
+import sys, json, yaml, os, re, importlib
 from collections import defaultdict , deque
-import sys, json, yaml, os, random, re ,copy, importlib, mmap
 from bson.objectid import ObjectId
 from time import time
 from datetime import timedelta as td, datetime as dt
 from pymongo.collection import Collection as mgcoll
-nolibs = []
 
-try:
-    import mysql.connector
-except:
-    nolibs.append( 'mysql-connector' )
-
-class JSONEncoder(json.JSONEncoder):
+class jsonencoder( json.JSONEncoder ):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
@@ -27,10 +18,7 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
 
 def loader(nd, ext):
-    file = open( nd, "r+" )
-    text = file.read()
-    file.close()
-
+    text = open( nd, "r+" ).read()
     data = {}
     if text.strip() == '':
         return data
@@ -38,7 +26,6 @@ def loader(nd, ext):
         data = yaml.safe_load( text )
     elif ext == '.json':
         data = json.loads( text )
-
     return data
 
 def to_jict(prev):
@@ -79,7 +66,7 @@ class jict( defaultdict ):
                 if nd[xs:]==x:
                     file,transf=True,x
                     break
-            
+
             # for x in prepend:
             #     xs = len(x)
             #     if xs => size: continue
@@ -116,28 +103,10 @@ class jict( defaultdict ):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
 
-    # def __iter__(self):
-    #     started = False
-    #
-    #     if self.generator != None:
-    #         if not started:
-    #             started = True
-    #             yield jict(self.dict())
-    #
-    #         for x in self.generator:
-    #             yield to_jict(x)
-
-    def has(self, args ):
-        keys= self.keys()
-        for x in args:
-            if x not in keys: return False
-        return True
-
     # creates a default valuef for the key if doesn't has one
     def init(self,key, deft ):
         if key in self.keys():
             return self[key]
-
         self[key] = deft
         return self[key]
 
@@ -158,7 +127,6 @@ class jict( defaultdict ):
                     return []
             except:
                 pass
-
 
         self[key] = deft
         return self[key]
@@ -368,18 +336,12 @@ class jict( defaultdict ):
                 plain_dict[ key ] = value
         return plain_dict
 
-    def random(self):
-        for x in range( random.randint(0, 9) ):
-            self[x] = x
-            if random.randint(0, 1) == 0:
-                self[x] = [ f for f in range(random.randint(0, 10)) ]
-
     def __str__(self):
         return self.json()
 
     def json(self,indent=2):
-        if indent == 0: return json.dumps( self.dict() , cls= JSONEncoder )
-        return json.dumps( self.dict() , indent = indent , cls= JSONEncoder )
+        if indent == 0: return json.dumps( self.dict() , cls= jsonencoder )
+        return json.dumps( self.dict() , indent = indent , cls= jsonencoder )
 
     def yaml(self):
         return yaml.dump(yaml.full_load( self.json(0) ), default_flow_style=False)
@@ -468,16 +430,7 @@ class jict( defaultdict ):
                 self.generator.update_one(
                     { '_id':self['_id'] },{ '$set':{'data':self.json()} }
                 )
-
             return
-        # if name != None:
-        #     valid = ['sql://']
-        #
-        #     for x in valid:
-        #         if len(name) >= len(x) and name[:len(x)] == x:
-        #             if name[:len(x)] == 'sql://':
-        #                 self.sql_store(name[len(x):])
-        #                 return
 
         self.storepath = name if name != None else self.storepath \
                     if self.storepath != None else 'jict.json'
@@ -499,23 +452,3 @@ class jict( defaultdict ):
             f.write( self.json() )
 
         f.close()
-
-    # def sql_store(self,db):
-    #     connection = sqlconnect()
-    #
-    #     skip = ['columns']
-    #
-    #     for table in self.keys():
-    #         lines = self[table]
-    #
-    #         if table in skip:
-    #             continue
-    #
-    #         for line in lines:
-    #             print( line )
-    #
-    #     cursor.close()
-    #     connection.close()
-    #
-    #     del cursor
-    #     del connection

@@ -20,11 +20,10 @@ def parse_version(module_file):
 f = open(os.path.join(os.path.dirname(__file__), "README.md"))
 jict_readme = f.read()
 f.close()
-jict_version = parse_version(os.path.join("jict", "__init__.py"))
 
 setup(
     name = "jict",
-    version= jict_version,
+    version= parse_version(os.path.join("jict", "__init__.py")) ,
     description = "Python dictionary with automatic and arbitrary levels of nestedness",
     long_description= jict_readme,
     long_description_content_type = 'text/markdown',
@@ -40,9 +39,6 @@ setup(
         "defaultdict",
         "dictionary",
         "auto-vivification",
-        'shared-array',
-        'shared-memory-json',
-        'shared-memory-yaml'
     ],
     license = "MIT",
     classifiers=[
