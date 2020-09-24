@@ -79,7 +79,7 @@ class jict( defaultdict ):
                 if nd[xs:]==x:
                     file,transf=True,x
                     break
-            #
+            
             # for x in prepend:
             #     xs = len(x)
             #     if xs => size: continue
