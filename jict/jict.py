@@ -99,68 +99,49 @@ class jict( defaultdict ):
                 xs = len(x)
                 if xs => size: continue
                 if nd[:xs] == x:
-                    prepsf = x
-                    nd = nd[xs:]
+                    prepsf = x; nd = nd[xs:]
 
             if file:
                 if not os.path.isfile( nd ):
                     if not os.path.exists((dr:=os.path.dirname(nd))):
-                        os.makedirs( dr )
-                    f=open( nd , 'w+' ); f.write("{}"); f.close()
+                        os.makedirs(dr)
+                    f = open( nd , 'w+' ); f.write("{}"); f.close()
                     transf = ''
 
             dt = None
             if transf in [ '.yaml' , '.json' ]:
-                dt = to_jict( loader(nd) )
-            elif:
+                dt = to_jict(loader( nd , transf ))
 
-
-            try:
-                if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
-                    if ( nd[:6] == 'shm//:' or nd[:6] == 'set://' ) and nd[-5:] == '.json':
-                        nd = nd[6:]
-
-                        dt.storepath = nd
-
-                        f = open( nd, "r+b" )
-                        dt.file = mmap.mmap( f.fileno() , 0 )
-                        return dt
-
-                    if not os.path.exists( nd ):
-                        open( nd , 'w+' ).close()
-
-                    dt = to_jict( loader(nd) )
-                    dt.storepath = nd
-
-                elif nd[-5:] == '.list':
-                    file = open( nd, "r+" )
-                    text = file.read()
-                    file.close()
-                    ls = []
-                    for x in text.split('\n'):
-                        if x == '': continue
-                        ls.append(x)
-
-                    return ls
-                elif nd[-4:] == '.env' or '.env.example' in nd:
-                    file = open( nd, "r+" )
-                    text = file.read()
-                    file.close()
-                    jct = jict()
-                    for x in text.split('\n'):
-                        if x == '': continue
-                        if '=' in x:
-                            fields = x.split('=')
-                            if len(fields) == 2:
-                                k,v = fields
-                                jct[k] = v
-
-                    jct.storepath = nd
-                    return jct
+            elif transf in ['.env','.env.example','.list']:
+                lst = [x for x in open(nd,"r+").read().split('\n') if x !='']
+                if transf == '.list':
+                    dt = lst
                 else:
-                    dt = to_jict( json.loads( nd ) )
-            except Exception as e:
-                dt = jict()
+                    jct = jict({(x:=y.split('='))[0]:x[1]for y in lst if'='in y})
+                    jct.storepath = nd
+                    dt = jct
+            else:
+                dt
+
+
+            # try:
+            #     if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
+            #         if ( nd[:6] == 'shm//:' or nd[:6] == 'set://' ) and nd[-5:] == '.json':
+            #             nd = nd[6:]
+            #
+            #             dt.storepath = nd
+            #
+            #             f = open( nd, "r+b" )
+            #             dt.file = mmap.mmap( f.fileno() , 0 )
+            #             return dt
+            #
+            #         if not os.path.exists( nd ):
+            #             open( nd , 'w+' ).close()
+            #
+            #         dt = to_jict( loader(nd) )
+            #         dt.storepath = nd
+            #
+            #         dt = to_jict( json.loads( nd ) )
 
             return dt
 

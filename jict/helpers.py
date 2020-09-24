@@ -35,7 +35,6 @@ def sqlconnect(str):
 
 def file( *args, **kwargs ):
     dirname = os.path.dirname(filestr)
-
     if os.path.isfile( filestr ):
         return open( *args, **kwargs )
 
