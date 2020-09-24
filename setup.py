@@ -32,7 +32,11 @@ setup(
     author='Vasyl Yovdiy',
     author_email='yovdiyvasyl@gmail.com',
     url = "https://github.com/y-vas/jict",
-    setup_requires = [],
+    # Your setup arguments
+    python_requires='>=3.8',  # Your supported Python ranges
+    setup_requires = [
+
+    ],
     keywords = [
         "nested",
         "jict",

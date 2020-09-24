@@ -25,10 +25,10 @@ def sqlconnect(str):
         "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)"
     , str )[0]
     cnt = mysql.connector.connect(
-        host=host,
-        database=database,
-        user=user,
-        password=pawd
+        host = host,
+        database = database,
+        user = user,
+        password = pawd
     )
     return cnt
 
