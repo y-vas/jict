@@ -22,20 +22,12 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         if isinstance(o, deque):
             return list(o)
-
         try:
             return json.JSONEncoder.default(self, o)
         except:
             return str(o)
 
-def loader(nd):
-    nam, ext = os.path.splitext( nd )
-
-    if not os.path.exists( nd ):
-        file = open( nd, "w+" )
-        file.write('{}')
-        file.close()
-
+def loader(nd, ext):
     file = open( nd, "r+" )
     text = file.read()
     file.close()
@@ -43,12 +35,10 @@ def loader(nd):
     data = {}
     if text.strip() == '':
         return data
-    elif ext == '.yaml':
+    if ext == '.yaml':
         data = yaml.safe_load( text )
     elif ext == '.json':
-        data = json.loads(text )
-    elif text.strip() == '':
-        data = {}
+        data = json.loads( text )
 
     return data
 
@@ -90,11 +80,46 @@ class jict( defaultdict ):
             jct.storepath = extra
             return jct
         elif isinstance( nd, str ):
+            size = len( nd )
+
+            append = [ '.yaml' , '.json', '.list', '.env', '.env.example']
+            prepend= [ 'shm//:', 'set://' ]
+
+            transf = ''
+            prepsf = ''
+            file = False
+
+            for x in append:
+                xs = len(x)
+                if xs => size: continue
+                if nd[xs:] == x:
+                    file, transf = True, x
+
+            for x in prepend:
+                xs = len(x)
+                if xs => size: continue
+                if nd[:xs] == x:
+                    prepsf = x
+                    nd = nd[xs:]
+
+            if file:
+                if not os.path.isfile( nd ):
+                    if not os.path.exists((dr:=os.path.dirname(nd))):
+                        os.makedirs( dr )
+                    f=open( nd , 'w+' ); f.write("{}"); f.close()
+                    transf = ''
+
+            dt = None
+            if transf in [ '.yaml' , '.json' ]:
+                dt = to_jict( loader(nd) )
+            elif:
+
+
             try:
                 if len(nd) >= 5 and nd[-5:] in [ '.yaml' , '.json' ]:
                     if ( nd[:6] == 'shm//:' or nd[:6] == 'set://' ) and nd[-5:] == '.json':
                         nd = nd[6:]
-                        dt = to_jict( loader(nd) )
+
                         dt.storepath = nd
 
                         f = open( nd, "r+b" )

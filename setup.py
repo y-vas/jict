@@ -32,11 +32,8 @@ setup(
     author='Vasyl Yovdiy',
     author_email='yovdiyvasyl@gmail.com',
     url = "https://github.com/y-vas/jict",
-    # Your setup arguments
     python_requires='>=3.8',  # Your supported Python ranges
-    setup_requires = [
-
-    ],
+    setup_requires =[],
     keywords = [
         "nested",
         "jict",
@@ -50,10 +47,7 @@ setup(
     license = "MIT",
     classifiers=[
         "Topic :: Utilities",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: End Users/Desktop",
