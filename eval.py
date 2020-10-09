@@ -23,10 +23,7 @@ from jict import array
 # jct = jict(db,'hi')
 # eval_base( jct )
 # jct.save()
-mylist = [1,34,55,6,['dheh'],667,[1,2,22],5]
-numbers = array(*mylist,key=3422 )
-numbers = array(1,34,55,6,['dheh'],667,[1,2,22],5,key=3422 )
+numbers = array(64,54,756,56,4523,879,879,87,43,3,234,53,4,52345)
 
-numbers = array(mylist,key=3422 )
-numbers = array([1,34,55,6,['dheh'],667,[1,2,22],5],key=3422 )
-print(numbers)
+
+print(numbers.test)
