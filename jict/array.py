@@ -1,5 +1,8 @@
 
 class array():
 
-    def __init__(self, *args, **kwargs ):
-        print(args, kwargs)
+    def __new__(self, *args, **kwargs ):
+        for arr in args:
+            if isinstance(arr,list):
+                print('Is list', arr)
+        return arr
