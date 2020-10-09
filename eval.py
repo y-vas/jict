@@ -23,6 +23,6 @@ from jict import array
 # jct = jict(db,'hi')
 # eval_base( jct )
 # jct.save()
-mylist = [1,34,55,6,3,6,888,667,[1,2,22],5]
+mylist = [1,34,55,6,[3,6,888],667,[1,2,22],5]
 numbers = array(*mylist,key=3422 )
 print(numbers)
