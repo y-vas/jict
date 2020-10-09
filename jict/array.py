@@ -10,6 +10,6 @@ class array():
             if isinstance(arr,list):
                 print('Is list', arr)
 
-                
+
     def __str__( self ):
-        return str(self.arr)
+        return 'array::' + str(self.arr)
