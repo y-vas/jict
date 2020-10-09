@@ -24,4 +24,4 @@ from jict import array
 # eval_base( jct )
 # jct.save()
 
-numbers = array([1,34,55,6,3,6,888,667])
+numbers = array(1,34,55,6,3,6,888,667, key=3422 )

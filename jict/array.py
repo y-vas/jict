@@ -1,5 +1,5 @@
 
 class array():
-    def __init__(self, arg):
-        self.arg = arg
-        print(arg)
+
+    def __init__(self, *args, **kwargs ):
+        print(args, kwargs)
