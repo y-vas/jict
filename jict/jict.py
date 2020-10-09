@@ -24,9 +24,9 @@ class jict( defaultdict ):
             dt = to_jict(nd)
             return dt
 
-        elif isinstance( nd, list ):
-            dt = to_jict(nd)
-            return dt
+        # elif isinstance( nd, list ):
+        #     dt = to_jict(nd)
+        #     return dt
 
         elif isinstance( nd , mgcoll ):
             jct = jict()
