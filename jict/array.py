@@ -3,12 +3,14 @@ class array( list ):
     arr = []
 
     def __init__(self, *args, **kwargs):
-        super(array, self).__init__()
+        # super(array, self).__init__()
         # inits
 
         for arr in args:
+            self.arr.append(arr)
             if isinstance(arr,list):
                 print('Is list', arr)
+                self.arr = array(arr)
 
 
     def __str__( self ):
