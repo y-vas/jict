@@ -1,5 +1,5 @@
 
-class array():
+class array( list ):
     arr = []
 
     def __init__(self, *args, **kwargs):
@@ -12,4 +12,10 @@ class array():
 
 
     def __str__( self ):
-        return 'array::' + str(self.arr)
+        printable = []
+        for x in sel.arr:
+            val = x
+            if isinstance(x,array):
+                val = x.arr
+            printable.append(val)
+        return 'array::' + str( printable )
