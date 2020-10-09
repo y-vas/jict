@@ -27,3 +27,4 @@ numbers = array(64,54,756,56,4523,879,879,87,43,3,234,53,4,52345)
 
 
 print(numbers.test)
+print(numbers)

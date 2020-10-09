@@ -1,4 +1,7 @@
 
+from .helpers import jsonencoder
+import json
+
 class array( list ):
     def __init__(self, *args, **kwargs):
         for arr in args:
@@ -7,9 +10,12 @@ class array( list ):
             else:
                 self.append(arr)
 
-
     def __str__( self ):
-        return 'array::' + str(list(self))
+        return json.dumps(
+            list(self) ,
+            indent = 2 ,
+            cls= jsonencoder
+        )
 
     @property
     def test(self):
