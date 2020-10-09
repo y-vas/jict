@@ -25,4 +25,8 @@ from jict import array
 # jct.save()
 mylist = [1,34,55,6,['dheh'],667,[1,2,22],5]
 numbers = array(*mylist,key=3422 )
+numbers = array(1,34,55,6,['dheh'],667,[1,2,22],5,key=3422 )
+
+numbers = array(mylist,key=3422 )
+numbers = array([1,34,55,6,['dheh'],667,[1,2,22],5],key=3422 )
 print(numbers)
