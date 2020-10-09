@@ -2,11 +2,16 @@
 class array( list ):
 
     def __init__(self, *args, **kwargs):
+        
         for arr in args:
             self.append(arr)
             if isinstance(arr,list):
                 print('Is list', arr)
-                # self.arr = array(arr)
+                self.append(array(*arr))
+            else:
+                self.append(arr)
+
+
 
     def __str__( self ):
         printable = []
