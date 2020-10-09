@@ -10,7 +10,10 @@ class array():
             self.arr.append(arr)
             if isinstance(arr,list):
                 print('Is list', arr)
-                self.arr = array(arr)
+                self.arr.append(array(*arr))
+            else:
+                self.arr.append(arr)
+
 
 
     def __str__( self ):
