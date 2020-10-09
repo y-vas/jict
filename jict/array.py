@@ -18,5 +18,17 @@ class array( list ):
         )
 
     @property
-    def test(self):
-        return 'hi'
+    def avg(self):
+        return self.sum / self.len
+    @property
+    def max(self):
+        return max(self)
+    @property
+    def max(self):
+        return min(self)
+    @property
+    def sum(self):
+        return sum(self)
+    @property
+    def len(self):
+        return len(self)
