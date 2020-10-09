@@ -1,11 +1,17 @@
 
 class array():
+    arr = []
 
-    def __new__(self, *args, **kwargs ):
+    def __init__(self, *args, **kwargs):
+        # super(array, self).__init__()
+        # inits
+
         for arr in args:
+            self.arr.append(arr)
             if isinstance(arr,list):
                 print('Is list', arr)
-                nwarray += arr
-            else:
-                print('No list', arr)
-        return nwarray
+                self.arr = array(arr)
+
+
+    def __str__( self ):
+        return 'array::' + str(self.arr)
