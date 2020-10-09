@@ -1,6 +1,8 @@
 from time import time
 from threading import Thread
-import os
+import os, json, yaml
+from bson.objectid import ObjectId
+from collections import deque
 
 def evaluate(foo, itter=1 , threaded = False ):
 
@@ -32,6 +34,28 @@ def sqlconnect(str):
     )
     return cnt
 
+
+class jsonencoder( json.JSONEncoder ):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        if isinstance(o, deque):
+            return list(o)
+        try:
+            return json.JSONEncoder.default(self, o)
+        except:
+            return str(o)
+
+def loader(nd, ext):
+    text = open( nd, "r+" ).read()
+    data = {}
+    if text.strip() == '':
+        return data
+    if ext == '.yaml':
+        data = yaml.safe_load( text )
+    elif ext == '.json':
+        data = json.loads( text )
+    return data
 
 def file( *args, **kwargs ):
     dirname = os.path.dirname(filestr)

@@ -1,32 +1,10 @@
 #!/usr/bin/env python
 import sys, json, yaml, os, re, importlib
 from collections import defaultdict , deque
-from bson.objectid import ObjectId
 from time import time
 from datetime import timedelta as td, datetime as dt
 from pymongo.collection import Collection as mgcoll
-
-class jsonencoder( json.JSONEncoder ):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        if isinstance(o, deque):
-            return list(o)
-        try:
-            return json.JSONEncoder.default(self, o)
-        except:
-            return str(o)
-
-def loader(nd, ext):
-    text = open( nd, "r+" ).read()
-    data = {}
-    if text.strip() == '':
-        return data
-    if ext == '.yaml':
-        data = yaml.safe_load( text )
-    elif ext == '.json':
-        data = json.loads( text )
-    return data
+from .helpers import loader, jsonencoder
 
 def to_jict(prev):
     nd = jict()
@@ -46,6 +24,10 @@ class jict( defaultdict ):
             dt = to_jict(nd)
             return dt
 
+        elif isinstance( nd, list ):
+            dt = to_jict(nd)
+            return dt
+
         elif isinstance( nd , mgcoll ):
             jct = jict()
             k = nd.find({'key':extra})
@@ -62,8 +44,8 @@ class jict( defaultdict ):
 
             for x in append:
                 xs = len(x)
-                if xs => size: continue
-                if nd[xs:]==x:
+                if xs >= size: continue
+                if nd[-xs:]==x:
                     file,transf=True,x
                     break
 
@@ -83,7 +65,7 @@ class jict( defaultdict ):
 
             if transf in [ '.yaml' , '.json' ]:
                 dt = to_jict(loader( nd , transf ))
-                jct.storepath = nd
+                dt.storepath = nd
             elif transf in ['.env','.env.example','.list']:
                 lst = [x for x in open(nd,"r+").read().split('\n') if x !='']
                 if transf == '.list':
@@ -132,6 +114,8 @@ class jict( defaultdict ):
         return self[key]
 
     def strptime(self,key,pattern):
+        if key not in self:
+            return None
         return dt.strptime( self[key] ,pattern )
 
     def strptimestamp(self,key,pattern):
@@ -183,6 +167,16 @@ class jict( defaultdict ):
 
         self[key] = val if val < self[key] else self[key]
         return self[key]
+
+    def dropk(self,*args,as_type='',deep=False):
+        for x in args:
+            if x in self:
+                del self[x]
+            elif isinstance(self[x],jict) and deep:
+                self[x].dropk(*args,as_type='',deep=deep)
+
+        if as_type == 'dict':
+            return self.dict()
 
     def drop(self ,target = None, as_type='', deep = False ):
 
@@ -248,7 +242,6 @@ class jict( defaultdict ):
                 self[replace] = self.pop(target)
 
     def replace(self, target , replacef = None ):
-
         if replacef == None and isinstance(target,dict):
             for k in target.keys():
                 self.replace(k,target[k])
@@ -346,47 +339,6 @@ class jict( defaultdict ):
     def yaml(self):
         return yaml.dump(yaml.full_load( self.json(0) ), default_flow_style=False)
 
-    def __getitem__(self,key):
-        jct = super( defaultdict, self ).__getitem__(key)
-
-        if hasattr( self , 'skig' ):
-            return jct
-
-        if hasattr( self , 'file' ):
-            mm = self.file
-            mm.seek( 0 )
-            text = mm.read(mm.size())
-            data = json.loads( text )
-            dt = jict( data )
-            val = dt[key]
-
-            setattr(self,'skip',True)
-            self[key] = val
-            del self.skip
-            return val
-
-        return jct
-
-    def __setitem__( self , key , data ):
-        super(defaultdict, self).__setitem__( key , data )
-
-        # stops the infinite set
-        if hasattr( self , 'skip' ):
-            return
-
-        if hasattr( self , 'file' ):
-            mm = self.file
-
-            setattr(self,'skig',True)
-            ns = bytes( self.json( 0 ) , 'utf-8')
-            del self.skig
-            mm.seek( 0 )
-            if mm.size() != len( ns ):
-                mm.resize( len( ns ) )
-
-            mm.seek( 0 )
-            mm.write(ns)
-
     def deque(self,key,data,maxlen = 5 ):
         if not isinstance(self[key], deque ):
             if isinstance(self[key], list ):
@@ -395,29 +347,9 @@ class jict( defaultdict ):
                 self[key] = deque(maxlen = maxlen)
 
         self[key].append( data )
-        if hasattr( self , 'file' ):
-            mm = self.file
 
-            setattr(self,'skig',True)
-            ns = bytes( self.json( 0 ) , 'utf-8')
-            del self.skig
-
-            mm.seek( 0 )
-            if mm.size() != len( ns ):
-                mm.resize( len( ns ) )
-
-            mm.seek( 0 )
-            mm.write(ns)
-
-    def close(self):
-        if hasattr( self , 'file' ):
-            self.file.flush()
-            self.file.close()
-
-    def save(self, name = None, tp = None , shm = '' ):
-        if hasattr( self , 'file' ):
-            return
-
+    def save(self, name = None ):
+        # generators
         if isinstance(self.generator, mgcoll ):
             if '_id' not in self.keys():
                 k = self.generator.find({'key':self.storepath})
@@ -430,23 +362,33 @@ class jict( defaultdict ):
                 self.generator.update_one(
                     { '_id':self['_id'] },{ '$set':{'data':self.json()} }
                 )
-            return
+            return self
 
-        self.storepath = name if name != None else self.storepath \
-                    if self.storepath != None else 'jict.json'
+        if name != None:
+            self.storepath = name
 
-        nam, ext = os.path.splitext( self.storepath )
-        tp = ext if tp == None else '.' + tp if not tp[0] == '.' else tp
-        self.storepath = nam + tp
+        if self.storepath == None:
+            return self
+
+        if not os.path.isfile( self.storepath ):
+            if not os.path.exists((dr:=os.path.dirname(nd))):
+                os.makedirs(dr)
+
+        transf = ''
+        size = len(self.storepath)
+        for x in ['.list','.env','.env.example','.yaml','.json']:
+            xs = len(x)
+            if xs >= size: continue
+            if self.storepath[-xs:]==x:
+                transf=x
+                break
 
         f = open(self.storepath, "w+")
-        if tp == '.example' or self.storepath[-4:] == '.env':
-            txt = ''
-            for x in self.keys():
-                if isinstance( self[x] ,str ):
-                    txt += f'{x}={self[x]}\n'
-            f.write( txt )
-        elif tp == '.yaml':
+        if transf in ['.example','.env']:
+            f.write( '\n'.join([f'{x}='+str(self[x]) for x in self.keys()]) )
+        elif transf == '.list':
+            f.write( '\n'.join([str(self[x]) for x in self.keys()]) )
+        elif transf == '.yaml':
             f.write( self.yaml() )
         else:
             f.write( self.json() )
