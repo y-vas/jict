@@ -26,5 +26,5 @@ from jict import array
 numbers = array(64,54,756,56,4523,879,879,87,43,3,234,53,4,52345,5,1,0,4352)
 
 
-print(numbers.test)
+print(numbers.max)
 print(numbers)
