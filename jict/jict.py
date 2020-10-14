@@ -278,17 +278,17 @@ class jict( defaultdict ):
                 else:
                     self[k] = replacef
 
-    def _ittrlist(self,lst,k,luky=True ):
+    def _ittrlist(self,lst,k,v,luky=True ):
         found = []
         for x in lst:
             if isinstance(x,list):
-                found += self._ittrlist(x,k,luky)
+                found += self._ittrlist(x,k,v,luky)
                 continue
             elif isinstance(x,dict) or isinstance(x,jict):
-                found += self._ittrdict(x,k,luky)
+                found += self._ittrdict(x,k,v,luky)
         return found
 
-    def _ittrdict(self,dic,k ,luky = True ):
+    def _ittrdict(self,dic,k,v,luky = True ):
         found = []
         for x in dic.keys():
             val = dic[x]
@@ -299,16 +299,16 @@ class jict( defaultdict ):
                 continue
 
             if isinstance(val, list):
-                found += self._ittrlist(val,k,luky)
+                found += self._ittrlist(val,k,v,luky)
                 continue
 
             elif isinstance(val,dict) or isinstance(val,jict):
-                found += self._ittrdict(val,k,luky)
+                found += self._ittrdict(val,k,v,luky)
 
         return found
 
-    def get(self,key,luky = True ):
-        ret = self._ittrdict(self,key, luky )
+    def get(self,key,val=None,luky = True ):
+        ret = self._ittrdict(self, key, val , luky )
 
         if len(ret) == 1:
             return ret[-1]
