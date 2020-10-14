@@ -1,0 +1,31 @@
+{
+  "base": 1,
+  "base2": {
+    "sub": 1
+  },
+  "base3": 5,
+  "RELES": [
+    {
+      "id": 33,
+      "status": false
+    },
+    {
+      "id": 37,
+      "status": false
+    },
+    {
+      "id": 33,
+      "status": false
+    },
+    {
+      "id": 37,
+      "status": false
+    }
+  ],
+  "to_follow": [
+    "test",
+    "vas",
+    "test",
+    "test"
+  ]
+}

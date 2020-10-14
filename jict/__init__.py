@@ -6,7 +6,7 @@ __version__ = '2.7'
 from .jict import jict
 from .helpers import evaluate , sqlconnect
 from collections import deque
-
+from .array import array
 try:
     import urwid
     from .menu import jictmt
