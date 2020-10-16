@@ -71,3 +71,22 @@ def file( *args, **kwargs ):
         f.close()
 
     return open( *args, **kwargs )
+
+def threadedlist( lista , rang, slep ):
+    thread_list = []
+
+    for x in lista:
+        th = Thread( target = x[0] , args=x[1] )
+        thread_list.append(th)
+
+        if len(thread_list) >= rang :
+            for x in thread_list:
+                x.start()
+            while len([t for t in thread_list if t.is_alive()]) != 0:
+                sleep( slep )
+            thread_list = []
+
+    for x in thread_list:
+        x.start()
+    while len([t for t in thread_list if t.is_alive()]) != 0:
+        sleep( slep )

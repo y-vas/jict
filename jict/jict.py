@@ -24,9 +24,15 @@ class jict( defaultdict ):
             dt = to_jict(nd)
             return dt
 
-        # elif isinstance( nd, list ):
-        #     dt = to_jict(nd)
-        #     return dt
+        elif isinstance( nd, list ):
+            jct = jict()
+            for i,e in enumerate( nd ):
+                if isinstance( e, dict ):
+                    e = to_jict(e)
+                jct[i] = e
+
+            jct.generator = list
+            return jct
 
         elif isinstance( nd , mgcoll ):
             jct = jict()
@@ -64,7 +70,19 @@ class jict( defaultdict ):
                     transf = ''
 
             if transf in [ '.yaml' , '.json' ]:
-                dt = to_jict(loader( nd , transf ))
+                da = loader( nd , transf )
+                dt = None
+                if isinstance(da,dict):
+                    dt = to_jict(da)
+                elif isinstance( da, list ):
+                    dt = jict()
+                    for i,e in enumerate( da ):
+                        if isinstance( e, dict ):
+                            e = to_jict(e)
+                        dt[i] = e
+                    dt.generator = list
+                else:
+                    dt = jict()
                 dt.storepath = nd
             elif transf in ['.env','.env.example','.list']:
                 lst = [x for x in open(nd,"r+").read().split('\n') if x !='']
@@ -84,6 +102,33 @@ class jict( defaultdict ):
     def __init__(self, nd = None , extra = ''):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
+
+        if self.generator == list:
+            @property
+            def avg(self):
+                return self.sum / self.len
+            @property
+            def max(self):
+                suma = 0
+                for x in self: suma += self[x]
+                return max(self)
+            @property
+            def min(self):
+                return min(self)
+            @property
+            def sum(self):
+                suma = 0
+                for x in self: suma += self[x]
+                return suma
+            @property
+            def len(self):
+                return len(self.keys())
+
+            self.avg = avg
+            self.max = max
+            self.min = min
+            self.sum = sum
+            self.len = len
 
     # creates a default valuef for the key if doesn't has one
     def init(self,key, deft ):
