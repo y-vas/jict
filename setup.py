@@ -31,7 +31,7 @@ setup(
     author='Vasyl Yovdiy',
     author_email='yovdiyvasyl@gmail.com',
     url = "https://github.com/y-vas/jict",
-    python_requires='>=3.8',  # Your supported Python ranges
+    python_requires='>=3.7',  # Your supported Python ranges
     setup_requires =[],
     keywords = [
         "nested",
