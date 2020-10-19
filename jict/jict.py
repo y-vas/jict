@@ -24,15 +24,15 @@ class jict( defaultdict ):
             dt = to_jict(nd)
             return dt
 
-        elif isinstance( nd, list ):
-            jct = jict()
-            for i,e in enumerate( nd ):
-                if isinstance( e, dict ):
-                    e = to_jict(e)
-                jct[i] = e
-
-            jct.generator = list
-            return jct
+        # elif isinstance( nd, list ):
+        #     jct = jict()
+        #     for i,e in enumerate( nd ):
+        #         if isinstance( e, dict ):
+        #             e = to_jict(e)
+        #         jct[i] = e
+        #
+        #     jct.generator = list
+        #     return jct
 
         elif isinstance( nd , mgcoll ):
             jct = jict()
@@ -103,32 +103,32 @@ class jict( defaultdict ):
         self.factory = jict
         defaultdict.__init__( self, self.factory )
 
-        if self.generator == list:
-            @property
-            def avg(self):
-                return self.sum / self.len
-            @property
-            def max(self):
-                suma = 0
-                for x in self: suma += self[x]
-                return max(self)
-            @property
-            def min(self):
-                return min(self)
-            @property
-            def sum(self):
-                suma = 0
-                for x in self: suma += self[x]
-                return suma
-            @property
-            def len(self):
-                return len(self.keys())
-
-            self.avg = avg
-            self.max = max
-            self.min = min
-            self.sum = sum
-            self.len = len
+        # if self.generator == list:
+        #     @property
+        #     def avg(self):
+        #         return self.sum / self.len
+        #     @property
+        #     def max(self):
+        #         suma = 0
+        #         for x in self: suma += self[x]
+        #         return max(self)
+        #     @property
+        #     def min(self):
+        #         return min(self)
+        #     @property
+        #     def sum(self):
+        #         suma = 0
+        #         for x in self: suma += self[x]
+        #         return suma
+        #     @property
+        #     def len(self):
+        #         return len(self.keys())
+        #
+        #     self.avg = avg
+        #     self.max = max
+        #     self.min = min
+        #     self.sum = sum
+        #     self.len = len
 
     # creates a default valuef for the key if doesn't has one
     def init(self,key, deft ):
@@ -416,7 +416,7 @@ class jict( defaultdict ):
             return self
 
         if not os.path.isfile( self.storepath ):
-            dr = os.path.dirname(self.storepath)    
+            dr = os.path.dirname(self.storepath)
             if not os.path.exists(dr):
                 os.makedirs(dr)
 
