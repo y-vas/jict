@@ -64,7 +64,8 @@ class jict( defaultdict ):
 
             if file:
                 if not os.path.isfile( nd ):
-                    if not os.path.exists((dr:=os.path.dirname(nd))):
+                    dr = os.path.dirname(nd)
+                    if not os.path.exists( dr ):
                         os.makedirs(dr)
                     f = open( nd , 'w+' ); f.write("{}"); f.close()
                     transf = ''
@@ -89,7 +90,11 @@ class jict( defaultdict ):
                 if transf == '.list':
                     dt = lst
                 else:
-                    jct = jict({(x:=y.split('='))[0]:x[1]for y in lst if'='in y})
+                    for y in lst:
+                        if '=' in y:
+                            x = y.split('=')
+                            jct[x[0]] = x[1]
+                            
                     jct.storepath = nd
                     dt = jct
             else:
