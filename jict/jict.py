@@ -416,7 +416,8 @@ class jict( defaultdict ):
             return self
 
         if not os.path.isfile( self.storepath ):
-            if not os.path.exists((dr:=os.path.dirname(self.storepath))):
+            dr = os.path.dirname(self.storepath)    
+            if not os.path.exists(dr):
                 os.makedirs(dr)
 
         transf = ''
