@@ -94,7 +94,7 @@ class jict( defaultdict ):
                         if '=' in y:
                             x = y.split('=')
                             jct[x[0]] = x[1]
-                            
+
                     jct.storepath = nd
                     dt = jct
             else:
