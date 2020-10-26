@@ -2,9 +2,9 @@
 
 """`jict` provides dictionaries with multiple levels of nested-ness."""
 
-__version__ = '2.8.1'
+__version__ = '2.8.2'
 from .jict import jict
-from .helpers import evaluate , sqlconnect
+from .helpers import evaluate , sqlconnect, cycle, walk
 from collections import deque
 try:
     import urwid

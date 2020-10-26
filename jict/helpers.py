@@ -1,8 +1,39 @@
 from time import time
 from threading import Thread
-import os, json, yaml
+import os, json, yaml, re
 from bson.objectid import ObjectId
 from collections import deque
+
+def walk( path , regx ):
+    myf = []
+    for r , _, files in os.walk( path ):
+        if len( files ) == 0:
+            continue
+        for x in files:
+            fl = os.path.join(r,x)
+            if bool(re.search(regx , fl )):
+                myf.append( fl )
+    return myf
+
+
+class cycle:
+    __pos__ = -1
+    def __init__( self , *args, **kwargs ):
+        if len(args) != 0:
+            if callable(args[0]):
+                self.reload = True
+                self.__argsf__ = args[0]
+                return
+        self.__args__ = args
+
+    def __getitem__(self, n ):
+        if self.reload:
+            self.__args__ = self.__argsf__()
+
+        n += self.__pos__
+        v = n % (len( self.__args__ ))
+        self.__pos__ += 1
+        return self.__args__[v]
 
 def evaluate(foo, itter=1 , threaded = False ):
 
