@@ -27,13 +27,17 @@ class cycle:
         self.__args__ = args
 
     def __getitem__(self, n ):
-        if self.reload:
+        if hasattr(self,'reload'):
             self.__args__ = self.__argsf__()
 
         n += self.__pos__
         v = n % (len( self.__args__ ))
         self.__pos__ += 1
-        return self.__args__[v]
+        return self.__args__[ v ]
+
+    def get(self, current , desired):
+        self.__pos__ = self.__args__.index( current )
+        return self.__getitem__( desired )
 
 def evaluate(foo, itter=1 , threaded = False ):
 
