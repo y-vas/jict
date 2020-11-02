@@ -1,7 +1,16 @@
 from eval import eval_base
 from jict import jict
 from pymongo import MongoClient
-from jict import array
+from jict import Mold
+
+
+mold = Mold(
+    id = ['int'],
+    name = {''}
+)
+
+mold.make()
+
 
 # check base
 # jct = jict()
@@ -23,8 +32,3 @@ from jict import array
 # jct = jict(db,'hi')
 # eval_base( jct )
 # jct.save()
-numbers = array(64,54,756,56,4523,879,879,87,43,3,234,53,4,52345,5,1,0,4352)
-
-
-print(numbers.max)
-print(numbers)

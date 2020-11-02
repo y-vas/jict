@@ -6,6 +6,8 @@ __version__ = '2.8.2'
 from .jict import jict
 from .helpers import evaluate , sqlconnect, cycle, walk
 from collections import deque
+from .maker import Mold
+
 try:
     import urwid
     from .menu import jictmt
