@@ -426,9 +426,9 @@ class jict( defaultdict ):
                 os.makedirs(dr)
 
         transf = ''
-        size = len(self.storepath)
+        size = len( self.storepath )
         for x in ['.list','.env','.env.example','.yaml','.json']:
-            xs = len(x)
+            xs = len( x )
             if xs >= size: continue
             if self.storepath[-xs:]==x:
                 transf=x

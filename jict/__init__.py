@@ -4,7 +4,8 @@
 
 __version__ = '2.8.2'
 from .jict import jict
-from .helpers import evaluate , sqlconnect, cycle, walk
+from .helpers import evaluate , sqlconnect, cycle
+from .helpers import walk
 from collections import deque
 try:
     import urwid
@@ -15,4 +16,4 @@ except Exception as e:
             super(jictmt, self).__init__()
             print( 'jictmt requires urwid, install by pip3 install urwid' )
 
-__all__ = ( 'jict', 'sqlconnect', 'evaluate', 'deque', 'jictmt' )
+__all__ = ( 'jict', 'sqlconnect', 'evaluate', 'deque', 'jictmt' ,'walk')

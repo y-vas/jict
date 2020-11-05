@@ -4,17 +4,21 @@ import os, json, yaml, re
 from bson.objectid import ObjectId
 from collections import deque
 
-def walk( path , regx ):
+
+def walk( path , regx , depth = 10 ):
     myf = []
     for r , _, files in os.walk( path ):
-        if len( files ) == 0:
-            continue
-        for x in files:
-            fl = os.path.join(r,x)
-            if bool(re.search(regx , fl )):
-                myf.append( fl )
-    return myf
+        if r[len(path):].count(os.sep) < depth:
 
+            if len( files ) == 0:
+                continue
+
+            for f in files:
+                fl = os.path.join(r,f)
+                if bool(re.search(regx , fl )):
+                    myf.append( fl )
+
+    return myf
 
 class cycle:
     __pos__ = -1
