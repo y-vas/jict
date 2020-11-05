@@ -4,6 +4,7 @@ import os, json, yaml, re
 from bson.objectid import ObjectId
 from collections import deque
 
+
 def walk( path , regx , depth = 10 ):
     myf = []
     for r , _, files in os.walk( path ):
@@ -18,7 +19,6 @@ def walk( path , regx , depth = 10 ):
                     myf.append( fl )
 
     return myf
-
 
 class cycle:
     __pos__ = -1
