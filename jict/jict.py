@@ -67,7 +67,10 @@ class jict( defaultdict ):
                     dr = os.path.dirname(nd)
                     if not os.path.exists( dr ):
                         os.makedirs(dr)
-                    f = open( nd , 'w+' ); f.write("{}"); f.close()
+
+                    f = open( nd , 'w+' );
+                    f.write("{}"); f.close()
+                    
                     transf = ''
 
             if transf in [ '.yaml' , '.json' ]:
