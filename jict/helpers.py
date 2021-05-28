@@ -92,6 +92,8 @@ def loader(nd, ext):
         return data
     if ext == '.yaml':
         data = yaml.safe_load( text )
+    if ext == '.yml':
+        data = yaml.safe_load( text )
     elif ext == '.json':
         data = json.loads( text )
     return data

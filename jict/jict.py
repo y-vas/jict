@@ -70,10 +70,10 @@ class jict( defaultdict ):
 
                     f = open( nd , 'w+' );
                     f.write("{}"); f.close()
-                    
+
                     transf = ''
 
-            if transf in [ '.yaml' , '.json' ]:
+            if transf in [ '.yaml',  '.yml' , '.json' ]:
                 da = loader( nd , transf )
                 dt = None
                 if isinstance(da,dict):
