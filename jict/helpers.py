@@ -62,7 +62,7 @@ def sqlconnect(str):
 
     user,pawd,host,database = re.findall(
         "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)"
-    , str )[0]
+    , str )[ 0 ]
 
     cnt = mysql.connector.connect(
         host     = host,

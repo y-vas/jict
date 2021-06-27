@@ -16,9 +16,7 @@ print(jct)
 #   "level1": {
 #     "level2": {
 #       "level3": "created nested dictionary"
-#     }
-#   }
-# }
+#     }}}
 
 # jict to dict
 mydict = jct.dict()
