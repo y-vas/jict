@@ -1,5 +1,9 @@
+from jict import jict
 
-def eval_base( jct ):
+
+def test_array():
+    jct = jict({})
+
     jct['base'] = 1
     if jct['base'] != 1:
         raise Exception(' base is not == 1 :', jct['base'])

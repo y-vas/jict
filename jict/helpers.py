@@ -43,37 +43,6 @@ class cycle:
         self.__pos__ = self.__args__.index( current )
         return self.__getitem__( desired )
 
-def evaluate( foo, itter = 1 , threaded = False ):
-    if threaded == True:
-        def threadedfoo():
-            Thread(target = lambda: evaluate(foo,itter) ).start()
-
-        threadedfoo()
-        return
-
-    t0 = time()
-    for _ in range( itter ):
-        foo()
-
-    print( time() - t0, "seconds wall time" )
-
-def sqlconnect(str):
-    import mysql.connector # or from mysql import connector
-
-    user,pawd,host,database = re.findall(
-        "(.*):(.*)@([0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}.[0-9]{0,3}):(.*)"
-    , str )[ 0 ]
-
-    cnt = mysql.connector.connect(
-        host     = host,
-        database = database,
-        user     = user,
-        password = pawd
-    )
-
-    return cnt
-
-
 class jsonencoder( json.JSONEncoder ):
     def default(self, o):
         if isinstance(o, ObjectId):

@@ -58,5 +58,5 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Utilities",
     ],
-    install_requires = ['numpy','pymongo','pyyaml'],
+    install_requires = ['PyYAML==6.0.1'],
 )

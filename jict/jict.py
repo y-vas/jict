@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-import sys, json, yaml, os, re, importlib
+import sys, json, yaml, os
 from collections import defaultdict , deque
-from time import time
 from datetime import timedelta as td, datetime as dt
-from pymongo.collection import Collection as mgcoll
 from .helpers import loader, jsonencoder
+from time import time
 
 def to_jict(prev):
     nd = jict()
@@ -34,7 +33,7 @@ class jict( defaultdict ):
         #     jct.generator = list
         #     return jct
 
-        elif isinstance( nd , mgcoll ):
+        elif str(nd) == "<class 'pymongo.collection.Collection'>":
             jct = jict()
             k = nd.find({'key':extra})
             if k.count() >= 1:
@@ -403,7 +402,7 @@ class jict( defaultdict ):
 
     def save(self, name = None ):
         # generators
-        if isinstance(self.generator, mgcoll ):
+        if str(self.generator) == "<class 'pymongo.collection.Collection'>":
             if '_id' not in self.keys():
                 k = self.generator.find({'key':self.storepath})
                 if k.count() >= 1:

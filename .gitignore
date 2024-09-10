@@ -6,3 +6,5 @@ mymemory*
 build
 .env
 test.json
+.pytest_cache
+__pycache__
