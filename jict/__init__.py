@@ -5,7 +5,7 @@
     levels of nested-ness.
 """
 
-__version__ = '3.0.1'
+__version__ = '3.0.2'
 
 from .jict import jict
 from .helpers import walk, cycle
